@@ -121,7 +121,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/small_border"
             android:textColorHint="#7C8BA0"
-            android:hint="Name" />
+            android:hint="Name"
+            android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,7 +144,8 @@
             android:textColorHint="#7C8BA0"
             android:layout_height="wrap_content"
             android:background="@drawable/small_border"
-            android:hint="Email" />
+            android:hint="Email"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

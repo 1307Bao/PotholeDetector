@@ -80,7 +80,7 @@
         android:layout_marginRight="40dp"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
-        android:text="continue"
+        android:text="Continue"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/white"
         android:textAlignment="center"

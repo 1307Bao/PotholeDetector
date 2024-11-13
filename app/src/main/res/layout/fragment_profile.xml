@@ -77,7 +77,8 @@
         android:layout_marginTop="40dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:text="Log out"
+        android:text="Log Out"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:paddingBottom="10dp"
         android:paddingTop="10dp" />

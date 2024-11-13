@@ -44,6 +44,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     Toast.makeText(ResetPasswordActivity.this, "Password at least 8 character", Toast.LENGTH_LONG);
                 } else {
                     Intent intent = new Intent(ResetPasswordActivity.this, SignInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
             }
