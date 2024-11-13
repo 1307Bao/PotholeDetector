@@ -28,7 +28,7 @@ public class PotholeItemAdapter extends RecyclerView.Adapter<PotholeItemAdapter.
 
     @NonNull
     @Override
-    public PotholeItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.porthole_item, parent, false);
 
@@ -44,6 +44,7 @@ public class PotholeItemAdapter extends RecyclerView.Adapter<PotholeItemAdapter.
 
     @Override
     public int getItemCount() {
+
         return potholeModels.size();
     }
 
