@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 
 public class CreateAccountActivity extends AppCompatActivity {
@@ -32,6 +33,14 @@ public class CreateAccountActivity extends AppCompatActivity {
     private TextView tvPrivacy, tvSignIn;
     private TextInputEditText textInputPassword, textInputName, textInputMail;
     private AppCompatButton btnNext;
+    private LocaleHelper localeHelper;
+
+    private void updateLanguage() {
+        String language =  localeHelper.getLanguage(this);
+        if (language != null) {
+            localeHelper.setLocale(this, language);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +52,9 @@ public class CreateAccountActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        localeHelper = new LocaleHelper();
+        updateLanguage();
 
         tvPrivacy = findViewById(R.id.privacy);
         tvSignIn = findViewById(R.id.signInAccount);
@@ -61,8 +73,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
 
 //      Create a link at a sequence
-        setLinkText("Tarms of Service", tvPrivacy);
-        setLinkText("Privasy\n Policy", tvPrivacy);
+        setLinkText("Terms of Service", tvPrivacy);
+        setLinkText("Privacy\n Policy", tvPrivacy);
         setLinkText("Sign In", tvSignIn);
 
 //      Setting color for icon at the end of edit text

@@ -44,13 +44,13 @@
             android:exported="false" />
         <activity
             android:name=".Activity.CreateAccountActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activity.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.LanguageChooserActivity"
-            android:exported="true">
+            android:exported="false">
         </activity>
 
         <meta-data

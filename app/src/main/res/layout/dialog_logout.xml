@@ -52,6 +52,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="Cancel"
+            android:textAllCaps="false"
             android:textColor="@color/light_primary_color"
             android:background="@drawable/border_with_stroke"
             android:textSize="12sp"/>
@@ -63,6 +64,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:text="Log out"
+            android:textAllCaps="false"
             android:background="@drawable/medium_border"
             android:textColor="@color/white"
             android:layout_toRightOf="@id/dialogButtonCancel"

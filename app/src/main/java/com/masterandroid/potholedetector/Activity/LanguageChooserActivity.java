@@ -14,12 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 
 public class LanguageChooserActivity extends AppCompatActivity {
 
     private AppCompatButton btnEnglish, btnVietNamese, btnNext;
     private Boolean isClick = false;
+    private LocaleHelper localeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,8 @@ public class LanguageChooserActivity extends AppCompatActivity {
             return insets;
         });
 
+        localeHelper = new LocaleHelper();
+
         int colorClicked = ContextCompat.getColor(this, R.color.light_sub_background_color_gray);
         int colorDefault = ContextCompat.getColor(this, R.color.light_sub_background_color_blue);
         btnEnglish = findViewById(R.id.btnEnglishLanguage);
@@ -43,6 +47,7 @@ public class LanguageChooserActivity extends AppCompatActivity {
             public void onClick(View view) {
                 btnVietNamese.setBackgroundColor(colorClicked);
                 btnEnglish.setBackgroundColor(colorDefault);
+                localeHelper.setLocale(LanguageChooserActivity.this, "vi");
                 isClick = true;
             }
         });
@@ -52,6 +57,8 @@ public class LanguageChooserActivity extends AppCompatActivity {
             public void onClick(View view) {
                 btnEnglish.setBackgroundColor(colorClicked);
                 btnVietNamese.setBackgroundColor(colorDefault);
+                localeHelper.setLocale(LanguageChooserActivity.this, "en");
+
                 isClick = true;
             }
         });

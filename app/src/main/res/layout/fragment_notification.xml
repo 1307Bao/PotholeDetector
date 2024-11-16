@@ -8,9 +8,9 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/notificationToolbar"
+        app:title="@string/notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Notification"
         app:titleTextColor="@color/light_primary_color"
         app:navigationIcon="@drawable/car_ui_icon_arrow_back" />
 
@@ -22,20 +22,20 @@
 
         <RadioButton
             android:id="@+id/notificationRadioButtonOn"
+            android:text="@string/on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:text="On"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/notificationRadioButtonOff"
+            android:text="@string/off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:text="Off"
             android:textSize="16sp" />
 
     </RadioGroup>

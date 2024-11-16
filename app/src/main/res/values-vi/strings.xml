@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api_key">AIzaSyCkQa0ejVz29HY9S3tk5wmxWKM9sQHDhz0</string>
+    <string name="app_name">Phát Hiện Ổ Gà</string>
+
+    <!-- Language -->
+    <string name="language">Ngôn ngữ</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="vietnamese">Tiếng Việt</string>
+
+    <!-- Common -->
+    <string name="continue_text">Tiếp tục</string>
+    <string name="back">Quay lại</string>
+
+    <!-- Sign In -->
+    <string name="sign_in">Đăng nhập</string>
+    <string name="welcome_back">Xin chào! Chào mừng trở lại</string>
+    <string name="email">Gmail</string>
+    <string name="password">Mật khẩu</string>
+    <string name="forget_password">Quên mật khẩu?</string>
+    <string name="no_account">Chưa có tài khoản? Đăng ký</string>
+
+    <!-- Reset Password -->
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="reset_password_message">Mật khẩu mới của bạn phải khác \nvới mật khẩu đã sử dụng trước đây.</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="reset">Đặt lại</string>
+
+    <!-- Forget Password -->
+    <string name="forget_password_title">Quên mật khẩu</string>
+    <string name="forget_password_message">Quên mật khẩu?\nNhập email của bạn để đặt lại</string>
+
+    <!-- Enter OTP -->
+    <string name="enter_otp">Nhập OTP</string>
+    <string name="enter_otp_message">Nhập mã OTP chúng tôi vừa gửi \nđến email đã đăng ký của bạn</string>
+    <string name="resend_otp">Không nhận được OTP? Gửi lại OTP</string>
+
+    <!-- Home -->
+    <string name="welcome_user">Xin chào, %1$s!</string>
+    <string name="total_potholes">Tổng số ổ gà</string>
+    <string name="distance_traveled">Quãng đường đã đi (km)</string>
+    <string name="today">Hôm nay</string>
+    <string name="recent">Gần đây</string>
+    <string name="all_potholes">Tất cả ổ gà</string>
+
+    <!-- Profile -->
+    <string name="appearance">Giao diện</string>
+    <string name="notification">Thông báo</string>
+    <string name="log_out">Đăng xuất</string>
+
+    <!-- Appearance -->
+    <string name="light">Sáng</string>
+    <string name="dark">Tối</string>
+    <string name="system">Hệ thống</string>
+
+    <!-- Notification -->
+    <string name="on">Bật</string>
+    <string name="off">Tắt</string>
+
+    <!-- Map -->
+    <string name="map_view">Xem bản đồ</string>
+
+    <!-- Report -->
+    <string name="weekly_report">Báo cáo tuần</string>
+</resources>

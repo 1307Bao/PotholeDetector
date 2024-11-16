@@ -1,5 +1,6 @@
 package com.masterandroid.potholedetector.Activity;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,16 +26,26 @@ import com.masterandroid.potholedetector.Fragment.MapFragment;
 import com.masterandroid.potholedetector.Fragment.ProfileFragment;
 import com.masterandroid.potholedetector.Fragment.ReportFragment;
 import com.masterandroid.potholedetector.R;
+import com.masterandroid.potholedetector.Helper.LocaleHelper;
+
 
 public class HomeActivity extends AppCompatActivity {
 
-    BottomNavigationView navBottom;
+    private BottomNavigationView navBottom;
+
+
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        String language = LocaleHelper.getLanguage(newBase);
+//        super.attachBaseContext(LocaleHelper.updateResources(newBase, language));
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_home);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -90,4 +101,5 @@ public class HomeActivity extends AppCompatActivity {
         navBottom.setItemIconTintList(colorStateList);
         navBottom.setItemTextColor(colorStateList);
     }
+
 }

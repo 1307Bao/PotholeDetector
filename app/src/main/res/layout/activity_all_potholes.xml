@@ -10,10 +10,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/allPotholeToolBar"
+        app:title="@string/all_potholes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="All Potholes"
         app:navigationIcon="@drawable/baseline_arrow_back_24" />
 
     <androidx.recyclerview.widget.RecyclerView

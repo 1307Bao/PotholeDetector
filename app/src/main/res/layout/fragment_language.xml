@@ -10,7 +10,7 @@
         android:id="@+id/languageToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Language"
+        app:title="@string/language"
         app:titleTextColor="@color/light_primary_color"
         app:navigationIcon="@drawable/car_ui_icon_arrow_back" />
 
@@ -22,29 +22,20 @@
 
         <RadioButton
             android:id="@+id/languageRadioButtonEnglish"
+            android:text="@string/english"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:text="English"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/languageRadioButtonVietnamese"
+            android:text="@string/vietnamese"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:text="Vietnamese"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/languageRadioButtonSystem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:text="System"
             android:textSize="16sp" />
 
 

@@ -17,26 +17,26 @@
 
     <TextView
         android:id="@+id/tvEnterOTPTitle"
+        android:text="@string/enter_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:text="Enter OTP"
         android:textColor="@color/light_primary_color"
         android:textSize="32sp"
         android:layout_marginTop="110dp" />
 
     <TextView
         android:id="@+id/tvEnterOTPSub"
+        android:text="@string/enter_otp_message"
         android:textColor="@color/light_sub_text_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvEnterOTPTitle"
-        android:text="Enter the OTP code we just sent \nyou on your registered Email"
         android:layout_marginTop="20dp"
         android:textAlignment="center" />
 
@@ -113,6 +113,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEnterOTPNext"
+        android:text="@string/continue_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -123,7 +124,6 @@
         android:layout_marginRight="40dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:text="Continue"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/white"
         android:textAlignment="center"
@@ -164,11 +164,11 @@
     </LinearLayout>
 
     <TextView
+    android:text="@string/resend_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/btnEnterOTPNext"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Didn’t get OTP? Resend OTP"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp" />
 
