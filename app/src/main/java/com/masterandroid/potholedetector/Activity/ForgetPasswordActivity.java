@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 import com.masterandroid.potholedetector.R;
 
-public class ForgetPasswordActivity extends AppCompatActivity {
+public class ForgetPasswordActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -9,7 +9,7 @@ import com.masterandroid.potholedetector.R;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +20,10 @@ public class SplashActivity extends AppCompatActivity {
         if (language == null || language.isEmpty()) {
             // Navigate to LanguageChooserActivity if language is not set
             Intent intent = new Intent(this, LanguageChooserActivity.class);
-            Log.e("Language", language);
             startActivity(intent);
         } else {
             // Navigate to CreateAccountActivity if language is set
             Intent intent = new Intent(this, CreateAccountActivity.class);
-            Log.e("Language", language);
             startActivity(intent);
         }
         finish();

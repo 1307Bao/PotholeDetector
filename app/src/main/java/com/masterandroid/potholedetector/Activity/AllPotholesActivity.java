@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AllPotholesActivity extends AppCompatActivity {
+public class AllPotholesActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private AllPotholesAdapter adapter;

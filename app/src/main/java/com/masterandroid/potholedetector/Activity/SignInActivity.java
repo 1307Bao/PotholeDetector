@@ -23,7 +23,7 @@ import com.masterandroid.potholedetector.R;
 
 import org.w3c.dom.Text;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class SignInActivity extends AppCompatActivity {
         AppCompatButton button = findViewById(R.id.btnSignInNext);
         TextView tvNextToForgetPassword = findViewById(R.id.tvForgetPasswordNext);
 
-        String signUpStr = "Sign Up";
+        String signUpStr = getString(R.string.no_account_sign_up);
 
         setUpSignUp(tvSignUp, signUpStr);
 

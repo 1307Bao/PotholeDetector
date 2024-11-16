@@ -28,7 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 
-public class CreateAccountActivity extends AppCompatActivity {
+public class CreateAccountActivity extends BaseActivity {
 
     private TextView tvPrivacy, tvSignIn;
     private TextInputEditText textInputPassword, textInputName, textInputMail;

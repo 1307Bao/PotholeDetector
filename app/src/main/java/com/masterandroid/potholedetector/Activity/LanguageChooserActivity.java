@@ -17,7 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 
-public class LanguageChooserActivity extends AppCompatActivity {
+public class LanguageChooserActivity extends BaseActivity {
 
     private AppCompatButton btnEnglish, btnVietNamese, btnNext;
     private Boolean isClick = false;

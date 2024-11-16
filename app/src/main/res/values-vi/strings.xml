@@ -19,6 +19,7 @@
     <string name="password">Mật khẩu</string>
     <string name="forget_password">Quên mật khẩu?</string>
     <string name="no_account">Chưa có tài khoản? Đăng ký</string>
+    <string name="no_account_sign_up">Đăng ký</string>
 
     <!-- Reset Password -->
     <string name="reset_password">Đặt lại mật khẩu</string>

@@ -29,16 +29,9 @@ import com.masterandroid.potholedetector.R;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private BottomNavigationView navBottom;
-
-
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        String language = LocaleHelper.getLanguage(newBase);
-//        super.attachBaseContext(LocaleHelper.updateResources(newBase, language));
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

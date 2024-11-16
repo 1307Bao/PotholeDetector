@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.masterandroid.potholedetector.R;
 
-public class EnterOTPActivity extends AppCompatActivity {
+public class EnterOTPActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
