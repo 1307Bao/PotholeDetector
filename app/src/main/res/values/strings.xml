@@ -14,7 +14,7 @@
     <!-- Sign In -->
     <string name="sign_in">Sign In</string>
     <string name="welcome_back">Hi! Welcome back</string>
-    <string name="email">Gmail</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="forget_password">Forget Password?</string>
     <string name="no_account">Don\'t have account? Sign Up</string>
@@ -37,8 +37,8 @@
     <string name="resend_otp">Didn\'t get OTP? Resend OTP</string>
 
     <!-- Home -->
-    <string name="welcome_user">Hi, %1$s!</string>
-    <string name="total_potholes">Total potholes</string>
+    <string name="hi_user">Hi, hehe!</string>
+    <string name="total_potholes_detected">Total potholes</string>
     <string name="distance_traveled">Distance traveled (km)</string>
     <string name="today">Today</string>
     <string name="recent">Recent</string>
@@ -63,5 +63,39 @@
 
     <!-- Report -->
     <string name="weekly_report">Weekly Report</string>
+    <string name="total_potholes_weekly">Total potholes in the week</string>
+    <string name="potholes_per_day">Potholes per Day</string>
+
+
+    <!-- Create Account -->
+    <string name="create_account">Create Account</string>
+    <string name="create_account_sub">Fill your information below or register \nwith your social account</string>
+    <string name="name">Name</string>
+    <string name="or">Or</string>
+    <string name="gmail">Gmail</string>
+    <string name="agree_privacy_policy">I’m agree to The Terms of Service and Privacy\n Policy</string>
+    <string name="create_account_next">Create Account</string>
+    <string name="sign_in_account_ques">Do you have account? Sign In</string>
+
+    <!-- Logout -->
+    <string name="logout_message">Are you sure you want to log out? You\'ll \nneed to login again to use the app.</string>
+    <string name="button_cancel">Cancel</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_report">Report</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Settings -->
+    <string name="setting_notifications">Notifications</string>
+    <string name="setting_appearance">Appearance</string>
+    <string name="setting_language">Language</string>
+    <string name="setting_privacy">Privacy &amp; Security</string>
+    <string name="setting_storage">Storage</string>
+    
+    <!-- PotHole Item -->
+    <string name="detect">Detect</string>
+
 </resources>
 

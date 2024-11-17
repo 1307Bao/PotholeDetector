@@ -10,10 +10,10 @@
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/reportToolbar"
+        app:title="@string/weekly_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Weekly Report"
         app:titleTextColor="@color/light_primary_color"
         android:background="@color/white" />
 
@@ -30,9 +30,9 @@
 
     <TextView
         android:id="@+id/totalPotholes"
+        android:text="@string/total_potholes_weekly"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total potholes: 0"
         android:textSize="16sp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"

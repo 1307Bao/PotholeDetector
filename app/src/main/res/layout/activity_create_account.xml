@@ -10,25 +10,26 @@
 
     <TextView
         android:id="@+id/tvCreateAccountTitle"
+        android:text="@string/create_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:text="Create Account"
         android:textColor="@color/light_primary_color"
         android:textSize="32sp"
         android:layout_marginTop="110dp" />
 
     <TextView
         android:id="@+id/tvCreateAccountSub"
+        android:text="@string/create_account_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvCreateAccountTitle"
-        android:text="Fill your information below or register \nwith your social account"
+        android:textColor="@color/light_sub_text_color"
         android:layout_marginTop="20dp"
         android:textAlignment="center" />
 
@@ -56,6 +57,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateByGmail"
+        android:text="@string/gmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +68,6 @@
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="36dp"
-        android:text="Gmail"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/light_main_text_color"
         android:textAlignment="textStart"
@@ -78,13 +79,13 @@
 
     <TextView
         android:id="@+id/tvOr"
+        android:text="@string/or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/btnCreateByFacebook"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"
-        android:text="Or"
         android:textSize="16sp"
         android:background="@drawable/round_border"
         android:elevation="1dp"
@@ -117,11 +118,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editName"
+            android:text="@string/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/small_border"
             android:textColorHint="#7C8BA0"
-            android:hint="Name"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -140,11 +141,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editEmail"
+            android:text="@string/email"
             android:layout_width="match_parent"
             android:textColorHint="#7C8BA0"
             android:layout_height="wrap_content"
             android:background="@drawable/small_border"
-            android:hint="Email"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,11 +165,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editPassword"
+            android:hint="@string/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="#7C8BA0"
             android:inputType="textPassword"
-            android:hint="Password"
             android:background="@drawable/small_border" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -186,9 +187,9 @@
 
     <TextView
         android:id="@+id/privacy"
+        android:text="@string/agree_privacy_policy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I’m agree to The Tarms of Service and Privasy\n Policy"
         android:textColor="@color/light_sub_text_color"
         app:layout_constraintLeft_toRightOf="@+id/isCheckPrivacy"
         app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
@@ -197,6 +198,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateAccountNext"
+        android:text="@string/create_account_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -207,7 +209,6 @@
         android:layout_marginRight="40dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:text="Create Account"
         android:fontFamily="sans-serif-condensed"
         android:textColor="@color/white"
         android:textAlignment="center"
@@ -220,11 +221,11 @@
 
     <TextView
         android:id="@+id/signInAccount"
+        android:text="@string/sign_in_account_ques"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/btnCreateAccountNext"
         app:layout_constraintStart_toStartOf="parent"
-        android:text="Do you have account? Sign In"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="14dp"
         android:textSize="12sp"

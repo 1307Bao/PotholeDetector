@@ -14,11 +14,11 @@
         tools:context=".Activity.HomeActivity">
 
         <TextView
+            android:text="@string/hi_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Hi, Huyền!"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:fontFamily="sans-serif"
@@ -63,9 +63,9 @@
                     android:background="@drawable/medium_border">
 
                     <TextView
+                        android:text="@string/total_potholes_detected"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total potholes detected"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -96,9 +96,9 @@
                     android:layout_marginLeft="20dp">
 
                     <TextView
+                        android:text="@string/total_potholes_detected"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Distance traveled (km)"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -135,11 +135,11 @@
                 android:background="@drawable/medium_border">
 
                 <TextView
+                    android:text="@string/today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="Today"
                     android:textColor="@color/light_primary_color"
                     android:textSize="36sp"
                     android:layout_margin="20dp"
@@ -147,11 +147,11 @@
 
                 <TextView
                     android:id="@+id/tvTotalPotholes"
+                    android:text="@string/total_potholes_detected"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:text="Total potholes"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:layout_marginTop="18dp"
@@ -185,24 +185,24 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:text="@string/recent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/homeTodayTotalInformation"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:text="Recent"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/light_primary_color" />
 
             <TextView
                 android:id="@+id/homeAllPotholesNavigation"
+                android:text="@string/all_potholes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/homeTodayTotalInformation"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="All Potholes"
                 android:textSize="12sp"
                 android:textColor="@color/light_sub_text_color"
                 android:layout_marginTop="32dp"

@@ -38,8 +38,8 @@
     <string name="resend_otp">Không nhận được OTP? Gửi lại OTP</string>
 
     <!-- Home -->
-    <string name="welcome_user">Xin chào, %1$s!</string>
-    <string name="total_potholes">Tổng số ổ gà</string>
+    <string name="hi_user">Xin chào, hehe!</string>
+    <string name="total_potholes_detected">Tổng số ổ gà</string>
     <string name="distance_traveled">Quãng đường đã đi (km)</string>
     <string name="today">Hôm nay</string>
     <string name="recent">Gần đây</string>
@@ -64,4 +64,38 @@
 
     <!-- Report -->
     <string name="weekly_report">Báo cáo tuần</string>
+    <string name="total_potholes_weekly">Tổng số ổ gà trong tuần</string>
+    <string name="potholes_per_day">Ổ gà mỗi ngày</string>
+
+    <!-- Create Account -->
+    <string name="create_account">Tạo tài khoản</string>
+    <string name="create_account_sub">Điền thông tin của bạn bên dưới hoặc đăng ký \nbằng tài khoản mạng xã hội</string>
+    <string name="name">Tên</string>
+    <string name="or">Hoặc</string>
+    <string name="gmail">Gmail</string>
+    <string name="agree_privacy_policy">Tôi đồng ý với Điều khoản dịch vụ và Chính sách \nbảo mật</string>
+    <string name="create_account_next">Tạo tài khoản</string>
+    <string name="sign_in_account_ques">Bạn có tài khoản không? Đăng nhập</string>
+
+    <!-- Logout -->
+    <string name="logout_message">Bạn có chắc chắn muốn đăng xuất không? \nBạn sẽ cần phải đăng nhập lại để sử dụng ứng dụng.</string>
+    <string name="button_cancel">Hủy</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_map">Bản đồ</string>
+    <string name="nav_report">Báo cáo</string>
+    <string name="nav_profile">Hồ sơ</string>
+    
+    <!-- Settings -->
+    <string name="setting_notifications">Thông báo</string>
+    <string name="setting_appearance">Giao diện</string>
+    <string name="setting_language">Ngôn ngữ</string>
+    <string name="setting_privacy">Quyền riêng tư &amp; Bảo mật</string>
+    <string name="setting_storage">Bộ nhớ</string>
+
+    <!-- PotHole Item -->
+    <string name="detect">Phát hiện</string>
+
+
 </resources>

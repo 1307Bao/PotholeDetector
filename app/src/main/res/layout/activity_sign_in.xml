@@ -31,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSignInAccountTitle"
         android:layout_marginTop="20dp"
+        android:textSize="18sp"
         android:textAlignment="center" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -57,7 +58,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSignInByGmail"
-        android:text="@string/email"
+        android:text="@string/gmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

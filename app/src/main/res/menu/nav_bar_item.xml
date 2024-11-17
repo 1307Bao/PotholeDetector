@@ -4,24 +4,23 @@
         android:id="@+id/home"
         android:icon="@drawable/home"
         android:enabled="true"
-        android:title="Home" />
+        android:title="@string/nav_home" />
 
     <item
         android:id="@+id/map"
         android:icon="@drawable/map"
         android:enabled="true"
-        android:title="Map" />
+        android:title="@string/nav_map" />
 
     <item
         android:id="@+id/report"
         android:icon="@drawable/report"
         android:enabled="true"
-        android:title="Report" />
+        android:title="@string/nav_report" />
 
     <item
         android:id="@+id/profile"
         android:icon="@drawable/profile"
         android:enabled="true"
-        android:title="Profile" />
-
+        android:title="@string/nav_profile" />
 </menu>

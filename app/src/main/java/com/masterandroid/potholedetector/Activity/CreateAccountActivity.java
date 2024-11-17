@@ -57,7 +57,12 @@ public class CreateAccountActivity extends BaseActivity {
         updateLanguage();
 
         tvPrivacy = findViewById(R.id.privacy);
+
         tvSignIn = findViewById(R.id.signInAccount);
+        // Set up click handler for Sign In text
+        String signInStr = getString(R.string.sign_in);
+        setLinkText(signInStr, tvSignIn);
+        
         textInputPassword = findViewById(R.id.editPassword);
         textInputMail = findViewById(R.id.editEmail);
         textInputName = findViewById(R.id.editName);
@@ -94,7 +99,7 @@ public class CreateAccountActivity extends BaseActivity {
             spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#3461FD")),
                     startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            if (word.equals("Sign In")) {
+            if (word.equals(getString(R.string.sign_in))) {
                 spannableString.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View view) {
@@ -121,6 +126,37 @@ public class CreateAccountActivity extends BaseActivity {
 
             tv.setText(spannableString);
         }
+    }
+
+
+    private void setUpSignIn(TextView tvSignIn, String signIn) {
+        String text = tvSignIn.getText().toString();
+        int startIndex = text.indexOf(signIn);
+        int endIndex = text.length();
+
+        SpannableString spannableString = new SpannableString(text);
+
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#3461FD")),
+                startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannableString.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                Intent intent = new Intent(CreateAccountActivity.this, SignInActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(Color.parseColor("#3461FD"));
+                ds.setUnderlineText(false);
+            }
+        }, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tvSignIn.setText(spannableString);
+        tvSignIn.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
     }
 
 }

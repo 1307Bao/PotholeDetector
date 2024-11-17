@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 //import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -67,14 +68,14 @@ public class ReportFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // Hiển thị tổng số pothole và khoảng thời gian
-        TextView totalPotholesTextView = view.findViewById(R.id.totalPotholes);
         TextView dateRangeTextView = view.findViewById(R.id.dateRange);
+        TextView totalPotholesTextView = view.findViewById(R.id.totalPotholes);
+
+        String dateRange = "3/11 - 9/11"; // Hoặc tính toán dựa trên dữ liệu thực tế
+        dateRangeTextView.setText(dateRange);
 
         int totalPotholes = getAllPotholes().size();
-        totalPotholesTextView.setText("Total potholes: " + totalPotholes);
-
-        String dateRange = "November 3 - November 9"; // Hoặc tính toán dựa trên dữ liệu thực tế
-        dateRangeTextView.setText(dateRange);
+        totalPotholesTextView.setText(getString(R.string.total_potholes_weekly) + ": " + totalPotholes);
     }
 
     private void setupBarChart(){
@@ -89,7 +90,7 @@ public class ReportFragment extends Fragment {
         entries.add(new BarEntry(5, 4));
         entries.add(new BarEntry(6, 8));
 
-        BarDataSet dataSet = new BarDataSet(entries, "Potholes per Day");
+        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.potholes_per_day));
         int chartColor = getResources().getColor(R.color.light_primary_color); // Get the color from resources
         dataSet.setColor(chartColor); // Set the color of the bars
 
@@ -101,10 +102,10 @@ public class ReportFragment extends Fragment {
         barChart.setFitBars(true); // Làm cho các cột vừa với biểu đồ
         barChart.invalidate(); // Refresh biểu đồ
 
-//        // Thiết lập mô tả cho biểu đồ
-//        Description description = new Description();
-//        description.setText("Số lượng pothole theo ngày trong tuần");
-//        barChart.setDescription(description);
+      // Ẩn description hoàn toàn
+    Description description = new Description();
+    description.setEnabled(false);  // Disable description
+    barChart.setDescription(description);
 
         // Thiết lập nhãn cho trục X
         String[] days = {"S", "M", "T", "W", "T", "F", "S"};
@@ -130,7 +131,7 @@ public class ReportFragment extends Fragment {
             // Giả sử mỗi ngày có từ 1 đến 5 pothole
             int count = (int) (Math.random() * 5) + 1;
             for (int i = 0; i < count; i++) {
-                list.add(new PotholeModel("Detect", "24/10/2024, 4:14 PM",
+                list.add(new PotholeModel(getString(R.string.detect), "24/10/2024, 4:14 PM",
                         "Địa chỉ pothole ở " + day + ", TP. HCM"));
             }
             groupedPotholes.put(day, list);
