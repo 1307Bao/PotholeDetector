@@ -38,12 +38,10 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        ConstraintLayout constraintLayout = view.findViewById(R.id.homeTodayTotalInformation);
-        GradientDrawable newBackground = (GradientDrawable) getResources().getDrawable(R.drawable.medium_border).mutate();
-
-        newBackground.setColor(ContextCompat.getColor(requireContext(), R.color.light_sub_background_color_gray));
-
-        constraintLayout.setBackground(newBackground);
+        // ConstraintLayout constraintLayout = view.findViewById(R.id.homeTodayTotalInformation);
+        // GradientDrawable newBackground = (GradientDrawable) getResources().getDrawable(R.drawable.medium_border).mutate();
+        // newBackground.setColor(ContextCompat.getColor(requireContext(), R.color.light_sub_background_color_gray));
+        // constraintLayout.setBackground(newBackground);
 
         initData();
 

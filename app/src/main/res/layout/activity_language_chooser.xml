@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.LanguageChooserActivity"
-    android:background="@color/light_main_background_color">
+    android:background="?attr/backgroundColor"
+    tools:context=".Activity.LanguageChooserActivity">
 
     <TextView
         android:id="@+id/tvSelectLanguageTitle"
@@ -36,7 +36,7 @@
         android:paddingLeft="30dp"
         android:text="English"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="20dp"
         android:background="@drawable/small_border"
@@ -59,7 +59,7 @@
         android:paddingLeft="30dp"
         android:text="Vietnamese"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="20dp"
         android:background="@drawable/small_border"
@@ -86,9 +86,9 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/small_border"
-        android:backgroundTint="@color/light_primary_color"
+        android:backgroundTint="?attr/colorPrimary"
         android:drawablePadding="10dp"
-        android:shadowColor="@color/light_primary_color"
+        android:shadowColor="?attr/colorPrimary"
         android:textAllCaps="false" />
 
 

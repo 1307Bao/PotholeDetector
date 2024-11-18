@@ -5,33 +5,34 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.CreateAccountActivity"
-    android:background="@color/white">
+    android:background="?attr/backgroundColor"
+    tools:context=".Activity.CreateAccountActivity">
 
     <TextView
         android:id="@+id/tvCreateAccountTitle"
         android:text="@string/create_account"
+        android:textColor="?attr/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:textColor="@color/light_primary_color"
         android:textSize="32sp"
         android:layout_marginTop="110dp" />
 
     <TextView
         android:id="@+id/tvCreateAccountSub"
+        android:textColor="?attr/subTextColor"
         android:text="@string/create_account_sub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvCreateAccountTitle"
-        android:textColor="@color/light_sub_text_color"
         android:layout_marginTop="20dp"
         android:textAlignment="center" />
+<!--    android:textColor="?attr/subTextColor"-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateByFacebook"
@@ -47,7 +48,7 @@
         android:paddingRight="20dp"
         android:text="Facebook"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="16dp"
         android:background="@drawable/small_border"
@@ -69,7 +70,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="36dp"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="16dp"
         android:background="@drawable/small_border"
@@ -87,10 +88,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"
         android:textSize="16sp"
+        android:textColor="?attr/mainTextColor"
         android:background="@drawable/round_border"
         android:elevation="1dp"
         android:padding="8dp"
-        android:backgroundTint="#fef7ff" />
+        android:backgroundTint="?attr/subBackgroundColorBlue" />
 
     <View
         android:layout_width="match_parent"
@@ -118,7 +120,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editName"
-            android:text="@string/name"
+            android:hint="@string/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/small_border"
@@ -141,7 +143,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editEmail"
-            android:text="@string/email"
+            android:hint="@string/email"
             android:layout_width="match_parent"
             android:textColorHint="#7C8BA0"
             android:layout_height="wrap_content"
@@ -187,14 +189,14 @@
 
     <TextView
         android:id="@+id/privacy"
-        android:text="@string/agree_privacy_policy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/light_sub_text_color"
+        android:layout_marginTop="28dp"
+        android:text="@string/agree_privacy_policy"
+        android:textColor="?attr/subTextColor"
+        android:textSize="12sp"
         app:layout_constraintLeft_toRightOf="@+id/isCheckPrivacy"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
-        android:layout_marginTop="20dp"
-        android:textSize="12sp" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCreateAccountNext"
@@ -214,9 +216,9 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/small_border"
-        android:backgroundTint="@color/light_primary_color"
+        android:backgroundTint="?attr/colorPrimary"
         android:drawablePadding="10dp"
-        android:shadowColor="@color/light_primary_color"
+        android:shadowColor="?attr/colorPrimary"
         android:textAllCaps="false" />
 
     <TextView
@@ -229,6 +231,6 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="14dp"
         android:textSize="12sp"
-        android:textColor="@color/light_sub_text_color" />
+        android:textColor="?attr/subTextColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,12 +84,15 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
         AlertDialog dialog = new AlertDialog.Builder(getActivity()).create();
         dialog.setView(view);
 
+        // Loại bỏ padding mặc định
+        dialog.setOnShowListener(dialogInterface -> {
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+        });
+
         AppCompatButton btnCancel = view.findViewById(R.id.dialogButtonCancel);
         AppCompatButton btnAccept = view.findViewById(R.id.dialogButtonLogout);
-
-        GradientDrawable newBackground = (GradientDrawable) getResources().getDrawable(R.drawable.medium_border).mutate();
-        newBackground.setColor(ContextCompat.getColor(requireContext(), R.color.white));
-        view.setBackground(newBackground);
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override

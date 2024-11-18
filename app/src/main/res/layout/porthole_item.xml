@@ -13,7 +13,7 @@
         android:text="@string/detect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textSize="20sp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="10dp"
@@ -30,7 +30,7 @@
         android:drawableLeft="@drawable/calendar"
         android:drawablePadding="10dp"
         android:layout_marginLeft="24dp"
-        android:textColor="@color/light_sub_text_color"
+        android:textColor="?attr/subTextColor"
         android:layout_marginTop="2dp" />
 
     <TextView

@@ -12,6 +12,7 @@
         android:text="24/10/2024"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:textColor="?attr/mainTextColor"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

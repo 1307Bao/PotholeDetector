@@ -1,5 +1,6 @@
 package com.masterandroid.potholedetector.Fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -7,18 +8,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-//import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.masterandroid.potholedetector.Adapter.PotholeItemAdapter;
 import com.masterandroid.potholedetector.Model.PotholeModel;
 import com.masterandroid.potholedetector.R;
@@ -91,9 +94,23 @@ public class ReportFragment extends Fragment {
         entries.add(new BarEntry(6, 8));
 
         BarDataSet dataSet = new BarDataSet(entries, getString(R.string.potholes_per_day));
-        int chartColor = getResources().getColor(R.color.light_primary_color); // Get the color from resources
-        dataSet.setColor(chartColor); // Set the color of the bars
 
+       // Get theme colors
+        int chartBarColor = getThemeColor(requireContext(), R.attr.chartBarColor);
+        int chartTextColor = getThemeColor(requireContext(), R.attr.chartTextColor);
+        int chartBackgroundColor = getThemeColor(requireContext(), R.attr.chartBackgroundColor);
+    
+        // Apply colors
+        dataSet.setColor(chartBarColor);
+        dataSet.setValueTextColor(chartTextColor); // Set color for values above bars
+        dataSet.setValueTextSize(12f); // Optional: adjust text size
+        dataSet.setValueFormatter(new ValueFormatter() {
+        @Override
+        public String getFormattedValue(float value) {
+            return String.valueOf((int) value); // Convert to integer
+        }
+    });
+        barChart.setBackgroundColor(chartBackgroundColor);
 
         BarData barData = new BarData(dataSet);
         barData.setBarWidth(0.6f); // Rộng của các cột
@@ -102,14 +119,19 @@ public class ReportFragment extends Fragment {
         barChart.setFitBars(true); // Làm cho các cột vừa với biểu đồ
         barChart.invalidate(); // Refresh biểu đồ
 
-      // Ẩn description hoàn toàn
-    Description description = new Description();
-    description.setEnabled(false);  // Disable description
-    barChart.setDescription(description);
+        // Ẩn description hoàn toàn
+        Description description = new Description();
+        description.setEnabled(false);  // Disable description
+        barChart.setDescription(description);
 
         // Thiết lập nhãn cho trục X
         String[] days = {"S", "M", "T", "W", "T", "F", "S"};
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(days));
+
+        // Set text colors
+        barChart.getXAxis().setTextColor(chartTextColor);
+        barChart.getAxisLeft().setTextColor(chartTextColor);
+        barChart.getLegend().setTextColor(chartTextColor);
 
         // Các thiết lập khác
         barChart.setDrawGridBackground(false);
@@ -118,7 +140,20 @@ public class ReportFragment extends Fragment {
         barChart.getXAxis().setGranularity(1f);
         barChart.getXAxis().setLabelCount(7);
         barChart.getXAxis().setPosition(com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(days) {
+            @Override
+            public String getFormattedValue(float value) {
+                return days[(int) value];
+            }
+        });
         barChart.getAxisRight().setEnabled(false);
+    }
+
+    // Add this helper method to get theme colors
+    private int getThemeColor(Context context, int attr) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attr, typedValue, true);
+        return typedValue.data;
     }
 
     private void initData(){

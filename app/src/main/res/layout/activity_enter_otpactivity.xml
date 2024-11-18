@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     tools:context=".Activity.EnterOTPActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -24,14 +24,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:textColor="@color/light_primary_color"
+        android:textColor="?attr/colorPrimary"
         android:textSize="32sp"
         android:layout_marginTop="110dp" />
 
     <TextView
         android:id="@+id/tvEnterOTPSub"
         android:text="@string/enter_otp_message"
-        android:textColor="@color/light_sub_text_color"
+        android:textColor="?attr/subTextColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,9 +129,9 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/small_border"
-        android:backgroundTint="@color/light_primary_color"
+        android:backgroundTint="?attr/colorPrimary"
         android:drawablePadding="10dp"
-        android:shadowColor="@color/light_primary_color"
+        android:shadowColor="?attr/colorPrimary"
         android:textAllCaps="false" />
 
     <LinearLayout
@@ -147,18 +147,18 @@
         <FrameLayout
             android:layout_width="36dp"
             android:layout_height="4dp"
-            android:background="@color/light_sub_background_color_gray" />
+            android:background="?attr/subBackgroundColorGray" />
 
         <FrameLayout
             android:layout_width="36dp"
             android:layout_height="4dp"
-            android:background="@color/light_primary_color"
+            android:background="?attr/colorPrimary"
             android:layout_marginLeft="16dp" />
 
         <FrameLayout
             android:layout_width="36dp"
             android:layout_height="4dp"
-            android:background="@color/light_sub_background_color_gray"
+            android:background="?attr/subBackgroundColorGray"
             android:layout_marginLeft="16dp" />
 
     </LinearLayout>

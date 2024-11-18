@@ -56,6 +56,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getLastLocation();
         Toolbar toolbar = view.findViewById(R.id.mapToolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
 
         return view;
     }

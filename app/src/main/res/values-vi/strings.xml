@@ -73,7 +73,7 @@
     <string name="name">Tên</string>
     <string name="or">Hoặc</string>
     <string name="gmail">Gmail</string>
-    <string name="agree_privacy_policy">Tôi đồng ý với Điều khoản dịch vụ và Chính sách \nbảo mật</string>
+    <string name="agree_privacy_policy">Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật</string>
     <string name="create_account_next">Tạo tài khoản</string>
     <string name="sign_in_account_ques">Bạn có tài khoản không? Đăng nhập</string>
 

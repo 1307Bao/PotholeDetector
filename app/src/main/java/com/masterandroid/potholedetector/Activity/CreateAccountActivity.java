@@ -66,6 +66,7 @@ public class CreateAccountActivity extends BaseActivity {
         textInputPassword = findViewById(R.id.editPassword);
         textInputMail = findViewById(R.id.editEmail);
         textInputName = findViewById(R.id.editName);
+
         btnNext = findViewById(R.id.btnCreateAccountNext);
 
         btnNext.setOnClickListener(new View.OnClickListener() {

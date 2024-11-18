@@ -5,19 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     tools:context=".Activity.SignInActivity">
 
     <TextView
         android:id="@+id/tvSignInAccountTitle"
         android:text="@string/sign_in"
+        android:textColor="?attr/colorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        android:textColor="@color/light_primary_color"
         android:textSize="32sp"
         android:layout_marginTop="110dp" />
 
@@ -26,7 +26,7 @@
         android:text="@string/welcome_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/light_sub_text_color"
+        android:textColor="?attr/subTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvSignInAccountTitle"
@@ -48,7 +48,7 @@
         android:paddingRight="20dp"
         android:text="Facebook"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="16dp"
         android:background="@drawable/small_border"
@@ -70,7 +70,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="36dp"
         android:fontFamily="sans-serif-condensed"
-        android:textColor="@color/light_main_text_color"
+        android:textColor="?attr/mainTextColor"
         android:textAlignment="textStart"
         android:textSize="16dp"
         android:background="@drawable/small_border"
@@ -86,12 +86,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"
-        android:text="Or"
+        android:text="@string/or"
         android:textSize="16sp"
         android:background="@drawable/round_border"
         android:elevation="1dp"
         android:padding="8dp"
-        android:backgroundTint="@color/white" />
+        android:backgroundTint="?attr/subBackgroundColorBlue" />
 
     <View
         android:layout_width="match_parent"
@@ -178,7 +178,7 @@
         android:textAlignment="center"
         android:textSize="20sp"
         android:background="@drawable/small_border"
-        android:backgroundTint="@color/light_primary_color"
+        android:backgroundTint="?attr/colorPrimary"
         android:drawablePadding="10dp"
         android:shadowColor="@color/light_primary_color"
         android:textAllCaps="false" />
@@ -193,6 +193,6 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="14dp"
         android:textSize="12sp"
-        android:textColor="@color/light_sub_text_color" />
+        android:textColor="?attr/subTextColor" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

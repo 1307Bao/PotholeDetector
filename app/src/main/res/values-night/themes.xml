@@ -1,7 +1,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PotholeDetector" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Theme.PotholeDetector" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color -->
+        <item name="colorPrimary">@color/dark_primary_color</item>
+
+        <!-- Background colors -->
+        <item name="android:windowBackground">@color/dark_main_background_color</item>
+        <item name="backgroundColor">@color/dark_main_background_color</item>
+        <item name="subBackgroundColorGray">@color/dark_sub_background_color_gray</item>
+        <item name="subBackgroundColorBlue">@color/dark_sub_background_color_blue</item>
+        <item name="chartBorderColor">@color/dark_chart_border_color</item>
+
+        <!-- Launcher icon background color -->
+        <item name="icLauncherBackgroundColor">@color/dark_ic_launcher_background</item>
+
+        <!-- Text colors -->
+        <item name="mainTextColor">@color/dark_main_text_color</item>
+        <item name="subTextColor">@color/dark_sub_text_color</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">@color/dark_main_background_color</item>
+<!--        <item name="android:windowLightStatusBar">false</item>-->
+        <!-- Today home page -->
+
+        <!-- Chart colors for dark mode -->
+        <item name="chartBarColor">@color/dark_primary_color</item>
+        <item name="chartTextColor">@color/dark_main_text_color</item>
+        <item name="chartBackgroundColor">@color/dark_main_background_color</item>
     </style>
 </resources>

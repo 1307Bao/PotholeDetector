@@ -3,6 +3,7 @@ package com.masterandroid.potholedetector.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 
-public class LanguageChooserActivity extends BaseActivity {
+public class LanguageChooserActivity extends AppCompatActivity {
 
     private AppCompatButton btnEnglish, btnVietNamese, btnNext;
     private Boolean isClick = false;
@@ -34,10 +35,22 @@ public class LanguageChooserActivity extends BaseActivity {
             return insets;
         });
 
+        if (LocaleHelper.getLanguage(this) != null) {
+            Intent intent = new Intent(LanguageChooserActivity.this, CreateAccountActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         localeHelper = new LocaleHelper();
 
-        int colorClicked = ContextCompat.getColor(this, R.color.light_sub_background_color_gray);
-        int colorDefault = ContextCompat.getColor(this, R.color.light_sub_background_color_blue);
+         // Thay thế việc lấy màu trực tiếp bằng việc sử dụng theme attributes
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.subBackgroundColorGray, typedValue, true);
+        int colorClicked = ContextCompat.getColor(this, typedValue.resourceId);
+        
+        getTheme().resolveAttribute(R.attr.subBackgroundColorBlue, typedValue, true);
+        int colorDefault = ContextCompat.getColor(this, typedValue.resourceId);
+
         btnEnglish = findViewById(R.id.btnEnglishLanguage);
         btnVietNamese = findViewById(R.id.btnVietNamLanguage);
         btnNext = findViewById(R.id.btnLanguageNext);

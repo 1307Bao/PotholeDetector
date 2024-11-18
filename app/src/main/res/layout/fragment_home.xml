@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="20dp"
-            android:background="@color/white"
+            android:background="?attr/backgroundColor"
             app:cardCornerRadius="100dp">
 
             <ImageView
@@ -96,7 +96,7 @@
                     android:layout_marginLeft="20dp">
 
                     <TextView
-                        android:text="@string/total_potholes_detected"
+                        android:text="@string/distance_traveled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
@@ -132,7 +132,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/medium_border">
+                android:background="@drawable/today_info_background">
 
                 <TextView
                     android:text="@string/today"
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:textColor="@color/light_primary_color"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="36sp"
                     android:layout_margin="20dp"
                     android:textStyle="bold" />
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/mainTextColor"
                     android:textSize="20sp"
                     android:layout_marginTop="18dp"
                     android:layout_marginRight="56dp"
@@ -163,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="8"
-                    android:textColor="@color/light_primary_color"
+                    android:textColor="?attr/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginRight="164dp"
@@ -175,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="/8.8km"
-                    android:textColor="@color/light_sub_text_color"
+                    android:textColor="?attr/subTextColor"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginRight="80dp"

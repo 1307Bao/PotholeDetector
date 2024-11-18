@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@color/white" />
-    <corners android:radius="400dp" /> <!-- Bo góc nếu cần -->
+    <solid android:color="?attr/subBackgroundColorBlue" />
+    <corners android:radius="400dp" />
 </shape>

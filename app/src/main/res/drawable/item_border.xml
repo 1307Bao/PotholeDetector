@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/white" />
+    <solid android:color="?attr/subBackgroundColorBlue" />
 
     <stroke
         android:width="2dp"
-        android:color="@color/light_sub_background_color_gray" />
+        android:color="?attr/subBackgroundColorGray" />
 
     <corners android:radius="10dp" />
 </shape>
