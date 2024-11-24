@@ -98,5 +98,9 @@
     <string name="detect">Detect</string>
 
     <string name="client_id">1084624321365-sj7kkqqd44ddmhgbgm4sgbrge791g7kn.apps.googleusercontent.com</string>
+
+    <string name="facebook_app_id">537338769095761</string>
+    <string name="fb_login_protocol_scheme">fb537338769095761</string>
+    <string name="facebook_client_token">61c8deee4ee37cdcf3e98b94af98c9c3</string>
 </resources>
 

@@ -28,6 +28,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,12 +45,17 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.masterandroid.potholedetector.API.ApiClient;
 import com.masterandroid.potholedetector.API.ApiService;
 import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
+import com.masterandroid.potholedetector.API.DTO.Request.RegisterByFacebookRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.RegisterByGmailRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.RegisterByUserRequest;
 import com.masterandroid.potholedetector.API.DTO.Response.RegisterResponse;
+import com.masterandroid.potholedetector.Helper.FacebookHelper;
 import com.masterandroid.potholedetector.Helper.LocaleHelper;
 import com.masterandroid.potholedetector.R;
 import com.masterandroid.potholedetector.Security.SecureStorage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -63,6 +74,7 @@ public class CreateAccountActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 1;
     private static final String USER_FLAG = "USERNAME";
     private ApiService apiService;
+    private FacebookHelper facebookHelper;
 
     private void updateLanguage() {
         localeHelper = new LocaleHelper();
@@ -85,6 +97,7 @@ public class CreateAccountActivity extends BaseActivity {
         });
         updateLanguage();
         apiService = ApiClient.getClient().create(ApiService.class);
+        facebookHelper = FacebookHelper.getInstance();
 
         tvPrivacy = findViewById(R.id.privacy);
         tvSignIn = findViewById(R.id.signInAccount);
@@ -103,6 +116,7 @@ public class CreateAccountActivity extends BaseActivity {
 
         setUpBtnRegisterByGoogle();
         setUpBtnRegisterByUser();
+        setUpBtnRegisterByFacebook();
 
 //      Create a link at a sequence
         setLinkText("Terms of Service", tvPrivacy);
@@ -222,6 +236,77 @@ public class CreateAccountActivity extends BaseActivity {
         });
     }
 
+    private void setUpBtnRegisterByFacebook() {
+        facebookHelper.registerCallback(this, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken accessToken = loginResult.getAccessToken();
+                GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken
+                        , new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(@Nullable JSONObject jsonObject
+                            , @Nullable GraphResponse graphResponse) {
+                        if (graphResponse.getError() != null) {
+                            throw new RuntimeException("Error fetching user data: "
+                                    + graphResponse.getError().getErrorMessage());
+                        } else {
+                            try {
+                                String name = jsonObject.getString("name");
+                                String email = jsonObject.getString("id");
+
+                                Log.e("USER DATA FB", name + " " + email);
+
+                                RegisterByFacebookRequest request = new RegisterByFacebookRequest(name, email);
+                                Call<ApiResponse<RegisterResponse>> register = apiService.registerByFacebook(request);
+
+                                register.enqueue(new Callback<ApiResponse<RegisterResponse>>() {
+                                    @Override
+                                    public void onResponse(Call<ApiResponse<RegisterResponse>> call
+                                            , Response<ApiResponse<RegisterResponse>> response) {
+
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            handlerResponse(response);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ApiResponse<RegisterResponse>> call, Throwable throwable) {
+                                        makeToast("Register is Failed");
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                });
+
+                graphRequest.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                makeToast("Register Canceled");
+            }
+
+            @Override
+            public void onError(@NonNull FacebookException e) {
+                makeToast("Register Failed");
+            }
+        });
+
+        btnRegisterByFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                facebookHelper.login(CreateAccountActivity.this);
+            }
+        });
+    }
+
+    private void registerByFacebook(int requestCode, int resultCode, @Nullable Intent data) {
+        facebookHelper.handleActivityResult(requestCode, resultCode, data);
+    }
+
     private void setUpBtnRegisterByGoogle() {
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -244,6 +329,7 @@ public class CreateAccountActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         registerByGoogleHandler(requestCode, resultCode, data);
+        registerByFacebook(requestCode, resultCode, data);
     }
 
     private void registerByGoogleHandler(int requestCode, int resultCode, @Nullable Intent data) {
