@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,9 +19,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.masterandroid.potholedetector.API.ApiClient;
+import com.masterandroid.potholedetector.API.ApiService;
+import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
 import com.masterandroid.potholedetector.R;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class EnterOTPActivity extends BaseActivity {
+    private EditText otpText1, otpText2, otpText3, otpText4, otpText5;
+    private EditText[] editTexts;
+    private AppCompatButton btnNext;
+    private ApiService apiService;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +45,10 @@ public class EnterOTPActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        apiService = ApiClient.getClient().create(ApiService.class);
+        email = getIntent().getStringExtra("GMAIL");
 
-        EditText otpText1, otpText2, otpText3, otpText4, otpText5;
-
-        AppCompatButton btnNext = findViewById(R.id.btnEnterOTPNext);
+        btnNext = findViewById(R.id.btnEnterOTPNext);
 
         Toolbar toolbarEnterOTP = findViewById(R.id.toolbarEnterOTP);
 
@@ -44,16 +58,10 @@ public class EnterOTPActivity extends BaseActivity {
         otpText4 = findViewById(R.id.otp_edit_4);
         otpText5 = findViewById(R.id.otp_edit_5);
 
-        EditText[] editTexts = new EditText[]{otpText1, otpText2, otpText3, otpText4, otpText5};
+        editTexts = new EditText[]{otpText1, otpText2, otpText3, otpText4, otpText5};
         setUpEditTexts(editTexts);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(EnterOTPActivity.this, ResetPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
+        setUpBtnEnterOtp();
 
         toolbarEnterOTP.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,5 +94,46 @@ public class EnterOTPActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void setUpBtnEnterOtp() {
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringBuilder otpBuilder = new StringBuilder("");
+                for (int i = 0; i < editTexts.length; i++) {
+                    otpBuilder.append(editTexts[i].getText().toString());
+                }
+
+                String otp = otpBuilder.toString();
+
+                Log.e("OTP: ", otp);
+
+                Call<ApiResponse<String>> validate = apiService.validateOtp(email, otp);
+                Log.e("BODY", email + ":" + otp);
+                validate.enqueue(new Callback<ApiResponse<String>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+
+                            ApiResponse<String> apiResponse = response.body();
+                            if (apiResponse != null) {
+                                if (apiResponse.getCode() == 1022) {
+                                    Toast.makeText(EnterOTPActivity.this, apiResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    Intent intent = new Intent(EnterOTPActivity.this, ResetPasswordActivity.class);
+                                    intent.putExtra("GMAIL", email);
+                                    startActivity(intent);
+                                }
+                            }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<String>> call, Throwable throwable) {
+
+                    }
+                });
+
+            }
+        });
     }
 }

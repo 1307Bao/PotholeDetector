@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -23,16 +24,35 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.masterandroid.potholedetector.API.ApiClient;
 import com.masterandroid.potholedetector.API.ApiService;
 import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
+import com.masterandroid.potholedetector.API.DTO.Request.LoginByFacebookRequest;
+import com.masterandroid.potholedetector.API.DTO.Request.LoginByGmailRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.LoginByUserRequest;
+import com.masterandroid.potholedetector.API.DTO.Request.RegisterByFacebookRequest;
+import com.masterandroid.potholedetector.API.DTO.Request.RegisterByGmailRequest;
 import com.masterandroid.potholedetector.API.DTO.Response.LoginResponse;
 import com.masterandroid.potholedetector.API.DTO.Response.RegisterResponse;
+import com.masterandroid.potholedetector.Helper.FacebookHelper;
 import com.masterandroid.potholedetector.R;
 import com.masterandroid.potholedetector.Security.SecureStorage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
@@ -47,6 +67,9 @@ public class SignInActivity extends BaseActivity {
     private AppCompatButton btnSignInByUser, btnSignInByGoogle, btnSignInByFacebook;
     private TextInputEditText textEmail, textPassword;
     private ApiService apiService;
+    private GoogleSignInClient googleSignInClient;
+    private static final int RC_SIGN_IN = 1;
+    private FacebookHelper facebookHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +82,7 @@ public class SignInActivity extends BaseActivity {
             return insets;
         });
         apiService = ApiClient.getClient().create(ApiService.class);
+        facebookHelper = FacebookHelper.getInstance();
 
         TextView tvSignUp = findViewById(R.id.signUpAccount);
 
@@ -74,7 +98,9 @@ public class SignInActivity extends BaseActivity {
         String signUpStr = getString(R.string.no_account_sign_up);
 
         setUpSignUp(tvSignUp, signUpStr);
-        setUpBtnSignInByUser(btnSignInByUser);
+        setUpBtnSignInByUser();
+        setUpBtnSignInByGmail();
+        setUpBtnSignInByFacebook();
 
         setUpNextToForgetPassword(tvNextToForgetPassword);
     }
@@ -111,8 +137,8 @@ public class SignInActivity extends BaseActivity {
     }
 
     // Add event to Sign In button, launch MainActivity
-    private void setUpBtnSignInByUser(AppCompatButton button){
-        button.setOnClickListener(new View.OnClickListener() {
+    private void setUpBtnSignInByUser(){
+        btnSignInByUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = textEmail.getText().toString().trim();
@@ -142,6 +168,146 @@ public class SignInActivity extends BaseActivity {
             }
         });
     }
+
+    private void setUpBtnSignInByGmail() {
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.client_id))
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        btnSignInByGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = googleSignInClient.getSignInIntent();
+                startActivityForResult(intent, RC_SIGN_IN);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        loginByGoogle(requestCode, resultCode, data);
+        loginByFacebook(requestCode, resultCode, data);
+    }
+
+    private void loginByGoogle(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                if (account != null) {
+                    if (account.getIdToken() != null) {
+                        Log.e("Google Token", account.getIdToken());
+                        LoginByGmailRequest request = new LoginByGmailRequest(account.getIdToken());
+                        sendLoginByGoogleRequest(request);
+                    } else {
+                        makeToast("Register Failed");
+                    }
+                } else {
+                    makeToast("Register Failed");
+                }
+
+            } catch (ApiException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void sendLoginByGoogleRequest(LoginByGmailRequest request) {
+        Call<ApiResponse<LoginResponse>> login = apiService.loginByGmail(request);
+
+        login.enqueue(new Callback<ApiResponse<LoginResponse>>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onResponse(Call<ApiResponse<LoginResponse>> call,
+                                   Response<ApiResponse<LoginResponse>> response) {
+                handlerResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<LoginResponse>> call, Throwable t) {
+                makeToast("Registration failed. Please try again later.");
+            }
+        });
+    }
+
+    private void setUpBtnSignInByFacebook() {
+        facebookHelper.registerCallback(this, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                AccessToken accessToken = loginResult.getAccessToken();
+                GraphRequest graphRequest = GraphRequest.newMeRequest(accessToken
+                        , new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(@Nullable JSONObject jsonObject
+                                    , @Nullable GraphResponse graphResponse) {
+                                if (graphResponse.getError() != null) {
+                                    throw new RuntimeException("Error fetching user data: "
+                                            + graphResponse.getError().getErrorMessage());
+                                } else {
+                                    try {
+                                        String name = jsonObject.getString("name");
+                                        String email = jsonObject.getString("id");
+
+                                        Log.e("USER DATA FB", name + " " + email);
+
+                                        LoginByFacebookRequest request = new LoginByFacebookRequest(name, email);
+                                        Call<ApiResponse<LoginResponse>> login = apiService.loginByFacebook(request);
+
+                                        login.enqueue(new Callback<ApiResponse<LoginResponse>>() {
+                                            @Override
+                                            public void onResponse(Call<ApiResponse<LoginResponse>> call
+                                                    , Response<ApiResponse<LoginResponse>> response) {
+
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    handlerResponse(response);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ApiResponse<LoginResponse>> call, Throwable throwable) {
+                                                makeToast("Register is Failed");
+                                            }
+                                        });
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            }
+                        });
+
+                graphRequest.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                makeToast("Register Canceled");
+            }
+
+            @Override
+            public void onError(@NonNull FacebookException e) {
+                makeToast("Register Failed");
+            }
+        });
+
+        btnSignInByFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                facebookHelper.login(SignInActivity.this);
+            }
+        });
+    }
+
+    private void loginByFacebook(int requestCode, int resultCode, @Nullable Intent data) {
+        facebookHelper.handleActivityResult(requestCode, resultCode, data);
+    }
+
+
 
     // Set a event when click on to launch ForgetPassword Activity
     private void setUpNextToForgetPassword(TextView tvNextToForgetPassword) {
