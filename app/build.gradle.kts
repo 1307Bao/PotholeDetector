@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.masterandroid.potholedetector"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -41,12 +41,13 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.car.ui.lib)
     implementation(libs.play.services.maps)
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation("com.mapbox.navigation:android:2.20.2")
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 

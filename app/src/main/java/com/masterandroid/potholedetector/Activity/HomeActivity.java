@@ -1,16 +1,12 @@
 package com.masterandroid.potholedetector.Activity;
 
-import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,7 +22,6 @@ import com.masterandroid.potholedetector.Fragment.MapFragment;
 import com.masterandroid.potholedetector.Fragment.ProfileFragment;
 import com.masterandroid.potholedetector.Fragment.ReportFragment;
 import com.masterandroid.potholedetector.R;
-import com.masterandroid.potholedetector.Helper.LocaleHelper;
 
 
 public class HomeActivity extends BaseActivity {
@@ -45,6 +40,8 @@ public class HomeActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        navBottom = findViewById(R.id.bottom_navigation);
+        switchFragment(new HomeFragment());
 
         setUpNavBottom();
     }
@@ -58,14 +55,14 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setUpNavBottom() {
-        navBottom = findViewById(R.id.bottom_navigation);
         navBottom.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment currentFragment = getCurrentFragment();
                 if (item.getItemId() == R.id.home) {
                     switchFragment(new HomeFragment());
                     return true;
-                } else if (item.getItemId() == R.id.map) {
+                } else if (item.getItemId() == R.id.map && !(currentFragment instanceof MapFragment)) {
                     switchFragment(new MapFragment());
                     return true;
                 } else if (item.getItemId() == R.id.report) {
@@ -94,5 +91,11 @@ public class HomeActivity extends BaseActivity {
         navBottom.setItemIconTintList(colorStateList);
         navBottom.setItemTextColor(colorStateList);
     }
+
+    public Fragment getCurrentFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        return fragmentManager.findFragmentById(R.id.fragmentContainer);
+    }
+
 
 }

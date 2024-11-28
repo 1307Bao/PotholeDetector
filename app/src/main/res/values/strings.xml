@@ -10,7 +10,7 @@
     <!-- Common -->
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
-    
+
     <!-- Sign In -->
     <string name="sign_in">Sign In</string>
     <string name="welcome_back">Hi! Welcome back</string>
@@ -93,14 +93,16 @@
     <string name="setting_language">Language</string>
     <string name="setting_privacy">Privacy &amp; Security</string>
     <string name="setting_storage">Storage</string>
-    
+
     <!-- PotHole Item -->
     <string name="detect">Detect</string>
 
-    <string name="client_id">1084624321365-sj7kkqqd44ddmhgbgm4sgbrge791g7kn.apps.googleusercontent.com</string>
+    <string name="client_id">1084624321365-ucd02hr6g8k2cotc1tbq5uugu7nt3bmh.apps.googleusercontent.com</string>
 
     <string name="facebook_app_id">537338769095761</string>
     <string name="fb_login_protocol_scheme">fb537338769095761</string>
     <string name="facebook_client_token">61c8deee4ee37cdcf3e98b94af98c9c3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
