@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="28dp"
         android:elevation="1dp"
         android:background="@color/white">
 
@@ -31,21 +33,59 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/functionalContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="28dp"
+        app:cardCornerRadius="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:background="@color/light_sub_background_color_gray">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Navigate"
+                android:layout_margin="20dp"
+                android:id="@+id/setRoute" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_margin="20dp"
+                android:backgroundTint="#FF0000"
+                android:textColor="#FFFFFF"
+                android:id="@+id/disable"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/informationPotholes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/setRoute"
+                android:text="Number of Potholes: 8 potholes"
+                android:layout_centerVertical="true"/>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/setRoute"
+        app:layout_constraintBottom_toTopOf="@id/functionalContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="20dp"
+        android:layout_margin="28dp"
         android:src="@drawable/baseline_my_location_24"
         android:id="@+id/focusLocation" />
-
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Set Route"
-        android:layout_margin="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/setRoute" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

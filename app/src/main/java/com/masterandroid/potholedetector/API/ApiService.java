@@ -1,14 +1,16 @@
 package com.masterandroid.potholedetector.API;
 
-import com.google.android.gms.common.api.Api;
 import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
+import com.masterandroid.potholedetector.API.DTO.Request.IntrospectRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.LoginByFacebookRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.LoginByGmailRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.LoginByUserRequest;
+import com.masterandroid.potholedetector.API.DTO.Request.LogoutRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.RegisterByFacebookRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.RegisterByGmailRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.RegisterByUserRequest;
 import com.masterandroid.potholedetector.API.DTO.Request.ResetPasswordRequest;
+import com.masterandroid.potholedetector.API.DTO.Response.AuthenticationResponse;
 import com.masterandroid.potholedetector.API.DTO.Response.LoginResponse;
 import com.masterandroid.potholedetector.API.DTO.Response.RegisterResponse;
 
@@ -44,4 +46,10 @@ public interface ApiService {
     
     @POST("/pothole/auth/reset-password")
     Call<ApiResponse<String>> resetPassword(@Body ResetPasswordRequest request);
+
+    @POST("/pothole/auth/introspect")
+    Call<ApiResponse<AuthenticationResponse>> introspect(@Body IntrospectRequest request);
+
+    @POST("/pothole/auth/logout")
+    Call<ApiResponse<AuthenticationResponse>> logout(@Body LogoutRequest logoutRequest);
 }

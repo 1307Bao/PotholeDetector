@@ -393,6 +393,8 @@ public class CreateAccountActivity extends BaseActivity {
         try {
             SecureStorage secureStorage = new SecureStorage(getApplicationContext());
             secureStorage.saveToken(registerResponse.getToken());
+
+            Log.e("TOKEN SAVE", registerResponse.getToken());
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }

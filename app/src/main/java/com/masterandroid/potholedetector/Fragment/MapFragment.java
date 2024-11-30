@@ -19,6 +19,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +87,7 @@ import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider;
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi;
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineView;
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions;
+import com.mapbox.navigation.ui.maps.route.line.model.RouteLineClearValue;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineError;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources;
@@ -153,7 +157,16 @@ public class MapFragment extends Fragment {
     private MapboxRouteLineApi routeLineApi;
     private MapboxRouteLineView routeLineView;
 
+    private CardView cardView;
+    private Button btnCancel;
+
+    private TextView informationPothole;
+
     private TextInputEditText editText;
+
+    private boolean isHide = false;
+    private boolean isNavigate = false;
+    private long currentRouteRequestId = -1;
 
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
@@ -239,7 +252,15 @@ public class MapFragment extends Fragment {
         setRoute = view.findViewById(R.id.setRoute);
         editText = view.findViewById(R.id.edit_query);
 
+        cardView = view.findViewById(R.id.functionalContainer);
+        btnCancel = view.findViewById(R.id.disable);
+        informationPothole = view.findViewById(R.id.informationPotholes);
+
+        cardView.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.GONE);
+
         setUpFullComponent();
+        handleCancel();
         handleSearch();
         checkAndRequestPermission(); 
         handleEventOnMap();
@@ -277,6 +298,38 @@ public class MapFragment extends Fragment {
         getGestures(mapView).addOnMoveListener(onMoveListener);
     }
 
+    private void handleCancel() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentRouteRequestId != -1) {
+                    mapboxNavigation.cancelRouteRequest(currentRouteRequestId);
+                    currentRouteRequestId = -1;
+                    setRoute.setVisibility(View.VISIBLE);
+                    btnCancel.setVisibility(View.GONE);
+                    isNavigate = false;
+
+                    routeLineApi.clearRouteLine(new MapboxNavigationConsumer<Expected<RouteLineError, RouteLineClearValue>>() {
+                        @Override
+                        public void accept(Expected<RouteLineError, RouteLineClearValue> routeLineErrorRouteLineClearValueExpected) {
+                            Style style = mapView.getMapboxMap().getStyle();
+                            if (style != null) {
+                                routeLineView.renderClearRouteLineValue(style, routeLineErrorRouteLineClearValueExpected);
+                            }
+                        }
+                    });
+
+                    RelativeLayout.LayoutParams layoutParams =
+                            (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
+                    layoutParams.addRule(RelativeLayout.END_OF, R.id.setRoute);
+                    informationPothole.setLayoutParams(layoutParams);
+
+                    mapboxNavigation.stopTripSession();
+                }
+            }
+        });
+    }
+
     private void handleSearch() {
         editText.setSingleLine(true);
 
@@ -297,6 +350,42 @@ public class MapFragment extends Fragment {
                             Point point = Point.fromLngLat(address.getLongitude(), address.getLatitude());
 
                             updateCamera(point, 0.00);
+
+                            Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.location_pin);
+                            AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
+                            PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+
+                            pointAnnotationManager.deleteAll();
+                            PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
+                                    .withPoint(point);
+                            pointAnnotationManager.create(pointAnnotationOptions);
+
+                            cardView.setVisibility(View.VISIBLE);
+
+                            setRoute.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    fetchRoute(point);
+                                    isNavigate = true;
+                                    setRoute.setVisibility(View.GONE);
+                                    btnCancel.setVisibility(View.VISIBLE);
+
+                                    RelativeLayout.LayoutParams layoutParams =
+                                            (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
+                                    layoutParams.addRule(RelativeLayout.END_OF, R.id.disable);
+                                    informationPothole.setLayoutParams(layoutParams);
+                                }
+                            });
+
+                            focusLocationBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    focusLocation = true;
+                                    getGestures(mapView).addOnMoveListener(onMoveListener);
+                                    focusLocationBtn.hide();
+                                }
+                            });
+                            return true;
                         }
 
                         return true;
@@ -343,17 +432,38 @@ public class MapFragment extends Fragment {
                 addOnMapClickListener(mapView.getMapboxMap(), new OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull Point point) {
-                        pointAnnotationManager.deleteAll();
-                        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
-                                .withPoint(point);
-                        pointAnnotationManager.create(pointAnnotationOptions);
+                        if (!isNavigate) {
+                            pointAnnotationManager.deleteAll();
+                            PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
+                                    .withPoint(point);
+                            cardView.setVisibility(View.VISIBLE);
+                            pointAnnotationManager.create(pointAnnotationOptions);
 
-                        setRoute.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fetchRoute(point);
+                            setRoute.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    fetchRoute(point);
+                                    isNavigate = true;
+                                    setRoute.setVisibility(View.GONE);
+                                    btnCancel.setVisibility(View.VISIBLE);
+
+                                    RelativeLayout.LayoutParams layoutParams =
+                                            (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
+                                    layoutParams.addRule(RelativeLayout.END_OF, R.id.disable);
+                                    informationPothole.setLayoutParams(layoutParams);
+                                }
+                            });
+                        } else {
+                            isHide = !isHide;
+                            if (isHide) {
+                                cardView.setVisibility(View.GONE);
+                                editText.setVisibility(View.GONE);
+                                return true;
                             }
-                        });
+
+                            cardView.setVisibility(View.VISIBLE);
+                            editText.setVisibility(View.VISIBLE);
+                        }
                         return true;
                     }
                 });
@@ -403,13 +513,15 @@ public class MapFragment extends Fragment {
                 builder.bearingsList(Arrays.asList(Bearing.builder().angle(location.getBearing()).degrees(45.0).build(), null));
                 applyDefaultNavigationOptions(builder);
 
-                mapboxNavigation.requestRoutes(builder.build(), new NavigationRouterCallback() {
+                currentRouteRequestId = mapboxNavigation.requestRoutes(builder.build(), new NavigationRouterCallback() {
                     @Override
                     public void onRoutesReady(@NonNull List<NavigationRoute> list, @NonNull RouterOrigin routerOrigin) {
                         mapboxNavigation.setNavigationRoutes(list);
                         focusLocationBtn.performClick();
                         setRoute.setEnabled(true);
                         setRoute.setText("Set route");
+
+                        mapboxNavigation.startTripSession();
                     }
 
                     @Override

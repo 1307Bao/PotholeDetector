@@ -34,7 +34,13 @@ public class SecureStorage {
         editor.apply();
     }
 
-    public String getToken(String token) {
-        return sharedPreferences.getString(TOKEN_FLAG, null);
+    public String getToken(String flags) {
+        return sharedPreferences.getString(flags, "");
+    }
+
+    public void deleteToken(String flags) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(flags);
+        editor.apply();
     }
 }

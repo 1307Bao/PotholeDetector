@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class LocaleHelper {
     private static final String SELECTED_LANGUAGE = "language_code";
-    private static final String IS_CHOOSE_LANGUAGE = "is_choose_language";
+    private static final String IS_CHOOSE_LANGUAGE_FIRST = "is_choose_language";
 
     public static void setLocale(Context context, String language) {
         persist(context, language);
@@ -25,14 +25,17 @@ public class LocaleHelper {
     }
 
     public static Context updateResources(Context context, String language) {
+        boolean isChooseFirstTime = false;
         if (language == null) {
             language = "en";
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(IS_CHOOSE_LANGUAGE, false);
-            editor.apply();
+        } else {
+            isChooseFirstTime = true;
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(IS_CHOOSE_LANGUAGE_FIRST, isChooseFirstTime);
+        editor.apply();
 
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
