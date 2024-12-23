@@ -1,111 +1,88 @@
 package com.masterandroid.potholedetector.Adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.masterandroid.potholedetector.Model.PotholeModel;
+import com.masterandroid.potholedetector.API.DTO.Response.PotholePotentialResponse;
+import com.masterandroid.potholedetector.Event.OperatorPotholeInterface;
 import com.masterandroid.potholedetector.R;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-// Create Adapter for recycler view in All Potholes Activity, get all pothole and sort it by date
-// Recycler view will display date and what pothole was detected in that date
+public class AllPotholesAdapter extends RecyclerView.Adapter<AllPotholesAdapter.ViewHolder> {
 
-public class AllPotholesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private List<PotholePotentialResponse> potholePotentials;
+    private Context context;
+    private OperatorPotholeInterface operatorPotholeInterface;
 
-    private Map<String, ArrayList<PotholeModel>> groupedItems;
-    private List<String> dates;
+    public AllPotholesAdapter(List<PotholePotentialResponse> potholePotentials, Context context, OperatorPotholeInterface operatorPotholeInterface) {
+        this.potholePotentials = potholePotentials;
+        this.context = context;
+        this.operatorPotholeInterface = operatorPotholeInterface;
+    }
 
-    public AllPotholesAdapter(@NonNull Map<String, ArrayList<PotholeModel>> groupedItems) {
-        this.groupedItems = groupedItems;
-        this.dates = new ArrayList<>(groupedItems.keySet());
-        Collections.sort(dates); // Sắp xếp ngày
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.notification_item, parent, false);
+
+        return new AllPotholesAdapter.ViewHolder(view);
     }
 
     @Override
-    public int getItemViewType(int position) {
-        int index = 0; // Số lượng item đã được thêm
-        for (String date : dates) {
-            if (position == index) {
-                return 0; // Ngày
-            }
-            index++; // Tăng chỉ số cho ngày
-            if (position < index + groupedItems.get(date).size()) {
-                return 1; // Item
-            }
-            index += groupedItems.get(date).size(); // Tăng chỉ số cho các item
-        }
-        return -1; // Không hợp lệ
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == 0) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.date_item, parent, false); // Layout cho ngày
-            return new DateViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.porthole_item, parent, false); // Layout cho item
-            return new ContentViewHolder(view);
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int index = 0;
-        for (String date : dates) {
-            if (position == index) {
-                ((DateViewHolder) holder).dateTextView.setText(date); // Hiển thị ngày
-                return;
-            }
-            index++; // Tăng chỉ số cho ngày
-            List<PotholeModel> itemsForDate = groupedItems.get(date);
-            if (position < index + itemsForDate.size()) {
-                int itemIndex = position - index; // Tính chỉ số item
-                ((ContentViewHolder) holder).tvStatus.setText(itemsForDate.get(itemIndex).getStatus());
-                ((ContentViewHolder) holder).tvAddress.setText(itemsForDate.get(itemIndex).getAddress());
-                ((ContentViewHolder) holder).tvDateTime.setText(itemsForDate.get(itemIndex).getDatetime());
-                return;
-            }
-            index += itemsForDate.size(); // Tăng chỉ số cho các item
-        }
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.tvAddress.setText(potholePotentials.get(position).getAddress());
+        holder.tvDateTime.setText(potholePotentials.get(position).getTimeDetected().toString());
     }
 
     @Override
     public int getItemCount() {
-        int count = 0;
-        for (List<PotholeModel> items : groupedItems.values()) {
-            count += 1 + items.size(); // 1 cho ngày và số lượng item
-        }
-        return count;
+        return potholePotentials.size();
     }
 
-    static class DateViewHolder extends RecyclerView.ViewHolder {
-        TextView dateTextView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        DateViewHolder(View itemView) {
+        TextView tvAddress, tvDateTime;
+        Button btnAccept, btnDeny;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            dateTextView = itemView.findViewById(R.id.date);
-        }
-    }
+            tvAddress = itemView.findViewById(R.id.notiAddress);
+            tvDateTime = itemView.findViewById(R.id.notiTimeDetect);
+            btnAccept = itemView.findViewById(R.id.notiAccept);
+            btnDeny = itemView.findViewById(R.id.notiDeny);
 
-    static class ContentViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDateTime, tvAddress, tvStatus;
+            btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (operatorPotholeInterface != null) {
+                        int position = getLayoutPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            operatorPotholeInterface.onAccept(position);
+                        }
+                    }
+                }
+            });
 
-        ContentViewHolder(View itemView) {
-            super(itemView);
-            tvDateTime = itemView.findViewById(R.id.dateTime);
-            tvAddress = itemView.findViewById(R.id.address);
-            tvStatus = itemView.findViewById(R.id.status);
+            btnDeny.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (operatorPotholeInterface != null) {
+                        int position = getLayoutPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            operatorPotholeInterface.onDeny(position);
+                        }
+                    }
+                }
+            });
         }
     }
 }

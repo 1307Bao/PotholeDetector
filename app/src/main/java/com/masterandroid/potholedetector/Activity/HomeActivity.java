@@ -12,7 +12,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +26,12 @@ import com.masterandroid.potholedetector.R;
 public class HomeActivity extends BaseActivity {
 
     private BottomNavigationView navBottom;
+    private HomeFragment homeFragment;
+    private MapFragment mapFragment;
+    private ReportFragment reportFragment;
+    private ProfileFragment profileFragment;
+
+    private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,35 +46,83 @@ public class HomeActivity extends BaseActivity {
             return insets;
         });
         navBottom = findViewById(R.id.bottom_navigation);
-        switchFragment(new HomeFragment());
+
+        homeFragment = new HomeFragment();
+        mapFragment = new MapFragment();
+        reportFragment = new ReportFragment();
+        profileFragment = new ProfileFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentContainer, profileFragment, "PROFILE").hide(profileFragment);
+        transaction.add(R.id.fragmentContainer, reportFragment, "REPORT").hide(reportFragment);
+        transaction.add(R.id.fragmentContainer, mapFragment, "MAP").hide(mapFragment);
+        transaction.add(R.id.fragmentContainer, homeFragment, "HOME");
+        transaction.commit();
+        
+        activeFragment = homeFragment;
 
         setUpNavBottom();
-    }
-
-    private void switchFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment);
-        fragmentTransaction.commit();
     }
 
     private void setUpNavBottom() {
         navBottom.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment currentFragment = getCurrentFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
                 if (item.getItemId() == R.id.home) {
-                    switchFragment(new HomeFragment());
+                    if (!(activeFragment instanceof HomeFragment)) {
+                        transaction.hide(activeFragment).show(homeFragment).commit();
+                        activeFragment = homeFragment;
+                    } else {
+                        transaction.remove(homeFragment);
+                        homeFragment.onDestroy();
+                        homeFragment = new HomeFragment();
+                        transaction.add(R.id.fragmentContainer, homeFragment, "HOME");
+                        transaction.commit();
+                        activeFragment = homeFragment;
+                    }
                     return true;
-                } else if (item.getItemId() == R.id.map && !(currentFragment instanceof MapFragment)) {
-                    switchFragment(new MapFragment());
+
+                } else if (item.getItemId() == R.id.map ) {
+                    if (!(activeFragment instanceof MapFragment)) {
+                        transaction.hide(activeFragment).show(mapFragment).commit();
+                        activeFragment = mapFragment;
+                    } else {
+                        mapFragment.onDestroy();
+                        transaction.remove(mapFragment);
+                        mapFragment = new MapFragment();
+                        transaction.add(R.id.fragmentContainer, mapFragment, "MAP");
+                        transaction.commit();
+                        activeFragment = mapFragment;
+                    }
                     return true;
+
                 } else if (item.getItemId() == R.id.report) {
-                    switchFragment(new ReportFragment());
+                    if (!(activeFragment instanceof ReportFragment)) {
+                        transaction.hide(activeFragment).show(reportFragment).commit();
+                        activeFragment = reportFragment;
+                    } else {
+                        transaction.remove(reportFragment);
+                        reportFragment.onDestroy();
+                        reportFragment = new ReportFragment();
+                        transaction.add(R.id.fragmentContainer, reportFragment, "REPORT");
+                        transaction.commit();
+                        activeFragment = reportFragment;
+                    }
+
                     return true;
+
                 } else if (item.getItemId() == R.id.profile) {
-                    switchFragment(new ProfileFragment());
+                    if (!(activeFragment instanceof ProfileFragment)) {
+                        transaction.hide(activeFragment).show(profileFragment).commit();
+                        activeFragment = profileFragment;
+                    } else {
+                        transaction.remove(profileFragment);
+                        transaction.add(R.id.fragmentContainer, profileFragment, "PROFILE");
+                        transaction.commit();
+                    }
+
                     return true;
                 }
 
@@ -91,11 +144,5 @@ public class HomeActivity extends BaseActivity {
         navBottom.setItemIconTintList(colorStateList);
         navBottom.setItemTextColor(colorStateList);
     }
-
-    public Fragment getCurrentFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        return fragmentManager.findFragmentById(R.id.fragmentContainer);
-    }
-
 
 }

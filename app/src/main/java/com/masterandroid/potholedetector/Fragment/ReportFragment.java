@@ -1,10 +1,11 @@
 package com.masterandroid.potholedetector.Fragment;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,13 +23,28 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.masterandroid.potholedetector.API.ApiClient;
+import com.masterandroid.potholedetector.API.ApiService;
+import com.masterandroid.potholedetector.API.DTO.Response.PotholeDetectedResponse;
+import com.masterandroid.potholedetector.API.DTO.Response.ReportPerDayResponse;
+import com.masterandroid.potholedetector.API.DTO.Response.ReportResponse;
 import com.masterandroid.potholedetector.Adapter.PotholeItemAdapter;
 import com.masterandroid.potholedetector.Model.PotholeModel;
 import com.masterandroid.potholedetector.R;
+import com.masterandroid.potholedetector.Security.SecureStorage;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ReportFragment extends Fragment {
@@ -36,10 +52,10 @@ public class ReportFragment extends Fragment {
     private BarChart barChart;
     private RecyclerView recyclerView;
     private PotholeItemAdapter adapter;
-    private Map<String, ArrayList<PotholeModel>> groupedPotholes;
+    private ApiService apiService;
+    private TextView tvDetected, tvEncountered, tvTotal;
 
     public ReportFragment() {
-        // Required empty public constructor
     }
 
     public static ReportFragment newInstance() {
@@ -59,39 +75,69 @@ public class ReportFragment extends Fragment {
 
         // Khởi tạo BarChart
         barChart = view.findViewById(R.id.barChart);
-        setupBarChart();
+        tvDetected = view.findViewById(R.id.tvPotholeDetectedValue);
+        tvEncountered = view.findViewById(R.id.tvPotholeEncounteredValue);
+        tvTotal = view.findViewById(R.id.tvPotholeTotalValue);
 
         // Khởi tạo RecyclerView
         recyclerView = view.findViewById(R.id.reportRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Khởi tạo dữ liệu và adapter
-        initData();
-        adapter = new PotholeItemAdapter(new ArrayList<>(getAllPotholes()), getContext());
-        recyclerView.setAdapter(adapter);
+        try {
+            initData();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Hiển thị tổng số pothole và khoảng thời gian
         TextView dateRangeTextView = view.findViewById(R.id.dateRange);
-        TextView totalPotholesTextView = view.findViewById(R.id.totalPotholes);
 
-        String dateRange = "3/11 - 9/11"; // Hoặc tính toán dựa trên dữ liệu thực tế
-        dateRangeTextView.setText(dateRange);
-
-        int totalPotholes = getAllPotholes().size();
-        totalPotholesTextView.setText(getString(R.string.total_potholes_weekly) + ": " + totalPotholes);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            initDateRange(dateRangeTextView);
+        }
     }
 
-    private void setupBarChart(){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void initDateRange(TextView dateRangeTextView) {
+        // Lấy ngày hiện tại
+        LocalDate today = LocalDate.now();
+
+        // Xác định ngày đầu tuần (Monday) và cuối tuần (Sunday)
+        LocalDate startOfWeek = today.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1); // Monday
+        LocalDate endOfWeek = today.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 7); // Sunday
+
+        // Định dạng ngày và tháng
+        DateTimeFormatter monthDayFormatter = DateTimeFormatter.ofPattern("MMMM d", Locale.ENGLISH);
+
+        // Format ngày đầu tuần và cuối tuần
+        String formattedStart = startOfWeek.format(monthDayFormatter);
+        String formattedEnd = endOfWeek.format(monthDayFormatter);
+
+        // Kết quả cuối cùng
+        String currentWeek = formattedStart + " - " + formattedEnd;
+
+        dateRangeTextView.setText(currentWeek);
+    }
+
+    private void setupBarChart(List<ReportPerDayResponse> report){
         // Tạo dữ liệu cho biểu đồ
         List<BarEntry> entries = new ArrayList<>();
         // Giả sử dữ liệu số lượng pothole theo các ngày trong tuần từ 0 (Sunday) đến 6 (Saturday)
-        entries.add(new BarEntry(0, 5));
-        entries.add(new BarEntry(1, 3));
-        entries.add(new BarEntry(2, 6));
-        entries.add(new BarEntry(3, 2));
-        entries.add(new BarEntry(4, 7));
-        entries.add(new BarEntry(5, 4));
-        entries.add(new BarEntry(6, 8));
+        int numberOfDetected = 0;
+        int numberOfEncountered = 0;
+        int numberOfTotal = 0;
+
+        for (int i = 0; i < 7; i++) {
+            entries.add(new BarEntry(i, report.get(i).getTotal()));
+            numberOfDetected += report.get(i).getTotalPotholeDetected();
+            numberOfEncountered += report.get(i).getTotalPotholeEncountered();
+            numberOfTotal += report.get(i).getTotal();
+        }
+
+        tvDetected.setText(String.valueOf(numberOfDetected));
+        tvEncountered.setText(String.valueOf(numberOfEncountered));
+        tvTotal.setText(String.valueOf(numberOfTotal));
 
         BarDataSet dataSet = new BarDataSet(entries, getString(R.string.potholes_per_day));
 
@@ -156,28 +202,43 @@ public class ReportFragment extends Fragment {
         return typedValue.data;
     }
 
-    private void initData(){
-        groupedPotholes = new HashMap<>();
-        // Giả sử dữ liệu từ thứ Hai đến Chủ Nhật
-        String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    private void initData() throws GeneralSecurityException, IOException {
+        SecureStorage secureStorage = new SecureStorage(requireContext());
+        String token = secureStorage.getToken("TOKEN_FLAG");
+        apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
 
-        for (String day : days) {
-            ArrayList<PotholeModel> list = new ArrayList<>();
-            // Giả sử mỗi ngày có từ 1 đến 5 pothole
-            int count = (int) (Math.random() * 5) + 1;
-            for (int i = 0; i < count; i++) {
-                list.add(new PotholeModel(getString(R.string.detect), "24/10/2024, 4:14 PM",
-                        "Địa chỉ pothole ở " + day + ", TP. HCM"));
+        Call<ReportResponse> call = apiService.getReport();
+        call.enqueue(new Callback<ReportResponse>() {
+            @Override
+            public void onResponse(Call<ReportResponse> call, Response<ReportResponse> response) {
+                if (response.isSuccessful()) {
+                    ReportResponse reportResponse = response.body();
+                    if (reportResponse != null) {
+                        List<PotholeDetectedResponse> detectedResponses = reportResponse.getPotholeDetectedResponses();
+                        List<ReportPerDayResponse> reportPerDayResponses = reportResponse.getReportPerDayResponses();
+
+                        setupBarChart(reportPerDayResponses);
+                        setUpRecyclerView(detectedResponses);
+                    }
+                }
             }
-            groupedPotholes.put(day, list);
-        }
+
+            @Override
+            public void onFailure(Call<ReportResponse> call, Throwable throwable) {
+
+            }
+        });
     }
 
-    private List<PotholeModel> getAllPotholes(){
-        List<PotholeModel> allPotholes = new ArrayList<>();
-        for (Map.Entry<String, ArrayList<PotholeModel>> entry : groupedPotholes.entrySet()){
-            allPotholes.addAll(entry.getValue());
+    private void setUpRecyclerView(List<PotholeDetectedResponse> detectedResponses) {
+        ArrayList<PotholeModel> potholeModels = new ArrayList<>();
+        for (PotholeDetectedResponse detectedResponse : detectedResponses) {
+            PotholeModel potholeModel = new PotholeModel("DETECT",
+                    detectedResponse.getTimeDetected().toString(), detectedResponse.getAddress());
+            potholeModels.add(potholeModel);
         }
-        return allPotholes;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new PotholeItemAdapter(potholeModels, getContext());
+        recyclerView.setAdapter(adapter);
     }
 }

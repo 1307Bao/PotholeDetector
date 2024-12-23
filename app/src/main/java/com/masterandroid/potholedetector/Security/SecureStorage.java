@@ -3,6 +3,7 @@ package com.masterandroid.potholedetector.Security;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -30,6 +31,7 @@ public class SecureStorage {
 
     public void saveToken(String token) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        Log.e("TOKEN", token);
         editor.putString(TOKEN_FLAG, token);
         editor.apply();
     }

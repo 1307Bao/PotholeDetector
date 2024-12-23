@@ -48,7 +48,7 @@ public class PotholeItemAdapter extends RecyclerView.Adapter<PotholeItemAdapter.
         return potholeModels.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView tvStatus, tvAddress, tvDateTime;
 

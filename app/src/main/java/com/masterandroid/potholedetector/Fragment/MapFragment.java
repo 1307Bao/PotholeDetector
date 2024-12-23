@@ -1,7 +1,6 @@
 package com.masterandroid.potholedetector.Fragment;
 
 import android.Manifest;
-import android.adservices.adselection.AddAdSelectionOverrideRequest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,7 +28,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +53,7 @@ import com.mapbox.api.directions.v5.models.Bearing;
 import com.mapbox.api.directions.v5.models.RouteOptions;
 import com.mapbox.bindgen.Expected;
 import com.mapbox.geojson.Point;
+import com.mapbox.geojson.utils.PolylineUtils;
 import com.mapbox.maps.CameraOptions;
 import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
@@ -92,15 +91,29 @@ import com.mapbox.navigation.ui.maps.route.line.model.RouteLineColorResources;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineError;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLineResources;
 import com.mapbox.navigation.ui.maps.route.line.model.RouteSetValue;
+import com.masterandroid.potholedetector.API.ApiClient;
+import com.masterandroid.potholedetector.API.ApiService;
+import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
+import com.masterandroid.potholedetector.API.DTO.Request.RouteRequest;
+import com.masterandroid.potholedetector.API.DTO.Response.PotholeResponse;
 import com.masterandroid.potholedetector.R;
+import com.masterandroid.potholedetector.Security.SecureStorage;
+import com.masterandroid.potholedetector.Service.LocationTrackingService;
+import com.masterandroid.potholedetector.Service.PotholeDetectionService;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -159,14 +172,18 @@ public class MapFragment extends Fragment {
 
     private CardView cardView;
     private Button btnCancel;
-
     private TextView informationPothole;
-
     private TextInputEditText editText;
+
+    private Intent serviceIntent;
+    private Intent locationTrackingIntent;
 
     private boolean isHide = false;
     private boolean isNavigate = false;
     private long currentRouteRequestId = -1;
+    private List<PotholeResponse> listPothole;
+    private ApiService apiService;
+    private PointAnnotationManager pointAnnotationManager;
 
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
@@ -247,6 +264,19 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        try {
+            SecureStorage secureStorage = new SecureStorage(requireContext());
+            String token = secureStorage.getToken("TOKEN_FLAG");
+            Log.e("TOKEN IN FRAGMENT:", token);
+            apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        serviceIntent = new Intent(requireContext(), PotholeDetectionService.class);
+        locationTrackingIntent = new Intent(requireContext(), LocationTrackingService.class);
+
         mapView = view.findViewById(R.id.mapView);
         focusLocationBtn = view.findViewById(R.id.focusLocation);
         setRoute = view.findViewById(R.id.setRoute);
@@ -258,6 +288,15 @@ public class MapFragment extends Fragment {
 
         cardView.setVisibility(View.GONE);
         btnCancel.setVisibility(View.GONE);
+
+        AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
+        pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+
+        try {
+            initData();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         setUpFullComponent();
         handleCancel();
@@ -319,6 +358,9 @@ public class MapFragment extends Fragment {
                         }
                     });
 
+                    requireActivity().stopService(serviceIntent);
+                    requireActivity().stopService(locationTrackingIntent);
+
                     RelativeLayout.LayoutParams layoutParams =
                             (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
                     layoutParams.addRule(RelativeLayout.END_OF, R.id.setRoute);
@@ -337,13 +379,14 @@ public class MapFragment extends Fragment {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (i == KeyEvent.KEYCODE_ENTER)) {
-                    String query = editText.getText().toString();
+                    String query = Objects.requireNonNull(editText.getText()).toString();
                     Geocoder geo = new Geocoder(requireContext());
                     try {
                         List<Address> addresses = geo.getFromLocationName(query, 1);
-                        Log.e("ADDRESS", "POINT: " + addresses.size() + "");
+                        assert addresses != null;
+                        Log.e("ADDRESS", "POINT: " + addresses.size());
 
-                        if (addresses.size() > 0) {
+                        if (!addresses.isEmpty()) {
                             Address address = addresses.get(0);
                             focusLocation = false;
                             focusLocationBtn.show();
@@ -351,9 +394,7 @@ public class MapFragment extends Fragment {
 
                             updateCamera(point, 0.00);
 
-                            Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.location_pin);
-                            AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
-                            PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+                            Bitmap bitmap = BitmapFactory.decodeResource(requireActivity().getResources(), R.drawable.location_pin);
 
                             pointAnnotationManager.deleteAll();
                             PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
@@ -366,14 +407,6 @@ public class MapFragment extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     fetchRoute(point);
-                                    isNavigate = true;
-                                    setRoute.setVisibility(View.GONE);
-                                    btnCancel.setVisibility(View.VISIBLE);
-
-                                    RelativeLayout.LayoutParams layoutParams =
-                                            (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
-                                    layoutParams.addRule(RelativeLayout.END_OF, R.id.disable);
-                                    informationPothole.setLayoutParams(layoutParams);
                                 }
                             });
 
@@ -426,9 +459,7 @@ public class MapFragment extends Fragment {
                     }
                 });
 
-                Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.location_pin);
-                AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
-                PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+                Bitmap bitmap = BitmapFactory.decodeResource(requireActivity().getResources(), R.drawable.location_pin);
                 addOnMapClickListener(mapView.getMapboxMap(), new OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull Point point) {
@@ -443,14 +474,6 @@ public class MapFragment extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     fetchRoute(point);
-                                    isNavigate = true;
-                                    setRoute.setVisibility(View.GONE);
-                                    btnCancel.setVisibility(View.VISIBLE);
-
-                                    RelativeLayout.LayoutParams layoutParams =
-                                            (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
-                                    layoutParams.addRule(RelativeLayout.END_OF, R.id.disable);
-                                    informationPothole.setLayoutParams(layoutParams);
                                 }
                             });
                         } else {
@@ -504,7 +527,6 @@ public class MapFragment extends Fragment {
             public void onSuccess(LocationEngineResult result) {
                 Location location = result.getLastLocation();
                 setRoute.setEnabled(false);
-                setRoute.setText("Fetching route...");
                 RouteOptions.Builder builder = RouteOptions.builder();
                 Point origin = Point.fromLngLat(Objects.requireNonNull(location).getLongitude(), location.getLatitude());
                 builder.coordinatesList(Arrays.asList(origin, point));
@@ -516,10 +538,24 @@ public class MapFragment extends Fragment {
                 currentRouteRequestId = mapboxNavigation.requestRoutes(builder.build(), new NavigationRouterCallback() {
                     @Override
                     public void onRoutesReady(@NonNull List<NavigationRoute> list, @NonNull RouterOrigin routerOrigin) {
+                        NavigationRoute route = list.get(0);
+                        String geometry = route.getDirectionsRoute().geometry();
+
+                        if (geometry != null) {
+                            List<RouteRequest> routeRequestList = new ArrayList<>();
+                            List<Point> points = PolylineUtils.decode(geometry, 6);
+                            for (Point point : points) {
+                                routeRequestList.add(new RouteRequest(point.longitude(), point.latitude()));
+                            }
+                            handleAlertPothole(points);
+                        }
+
+
                         mapboxNavigation.setNavigationRoutes(list);
                         focusLocationBtn.performClick();
                         setRoute.setEnabled(true);
-                        setRoute.setText("Set route");
+
+                        setOnClickSetRoute();
 
                         mapboxNavigation.startTripSession();
                     }
@@ -527,7 +563,7 @@ public class MapFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull List<RouterFailure> list, @NonNull RouteOptions routeOptions) {
                         setRoute.setEnabled(true);
-                        setRoute.setText("Set route");
+
                         Toast.makeText(requireContext(), "Route request failed", Toast.LENGTH_SHORT).show();
                     }
 
@@ -545,6 +581,24 @@ public class MapFragment extends Fragment {
         });
     }
 
+    private void setOnClickSetRoute() {
+        isNavigate = true;
+        setRoute.setVisibility(View.GONE);
+        btnCancel.setVisibility(View.VISIBLE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireActivity().startForegroundService(serviceIntent);
+        } else {
+            requireActivity().startService(serviceIntent);
+        }
+
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) informationPothole.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.END_OF, R.id.disable);
+        informationPothole.setLayoutParams(layoutParams);
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -552,4 +606,94 @@ public class MapFragment extends Fragment {
         mapboxNavigation.unregisterRoutesObserver(routesObserver);
         mapboxNavigation.unregisterLocationObserver(locationObserver);
     }
+
+    public void initData() throws GeneralSecurityException, IOException {
+
+        Call<ApiResponse<List<PotholeResponse>>> getAllPotholes = apiService.getPotholes();
+        getAllPotholes.enqueue(new Callback<ApiResponse<List<PotholeResponse>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<PotholeResponse>>> call, @NonNull Response<ApiResponse<List<PotholeResponse>>> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    listPothole = response.body().getResult();
+
+                    drawPothole();
+                    Log.e("GET POTHOLE", listPothole.size() + "");
+
+                } else {
+                    Toast.makeText(requireContext(), response.code() + "", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<PotholeResponse>>> call, @NonNull Throwable throwable) {
+                Toast.makeText(requireContext(), "GET POTHOLE FAILED 2", Toast.LENGTH_SHORT).show();
+                Log.e("ERROR GET POTHOLE", throwable.getMessage());
+            }
+        });
+    }
+
+    public void drawPothole() {
+        if (listPothole != null) {
+            Log.e("DRAW", listPothole.size() + "");
+            Bitmap bitmap = BitmapFactory.decodeResource(requireActivity().getResources(), R.drawable.pothole);
+            AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
+            PointAnnotationManager pointAnnotation = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+
+            for (PotholeResponse potholeResponse : listPothole) {
+                Log.e("DRAW", potholeResponse.getLongitude()+" "+potholeResponse.getLatitude());
+                Point point = Point.fromLngLat(potholeResponse.getLongitude(), potholeResponse.getLatitude());
+                PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
+                        .withPoint(point);
+                pointAnnotation.create(pointAnnotationOptions);
+            }
+        }
+    }
+
+    private void handleAlertPothole(List<Point> waypoints) {
+        List<RouteRequest> requests = new ArrayList<>();
+        for (Point waypoint : waypoints) {
+            requests.add(new RouteRequest(waypoint.longitude(), waypoint.latitude()));
+        }
+
+        Call<ApiResponse<List<PotholeResponse>>> getPotholeOnMap = apiService.getAllPotholeOnMap(requests);
+        getPotholeOnMap.enqueue(new Callback<ApiResponse<List<PotholeResponse>>>(){
+
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<PotholeResponse>>> call, @NonNull Response<ApiResponse<List<PotholeResponse>>> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    listPothole = response.body().getResult();
+                    informationPothole.setText("Number of Potholes: " + listPothole.size() + " potholes");
+
+                    for (PotholeResponse potholeResponse : listPothole) {
+                        Log.e("DRAW", potholeResponse.getLongitude()+" "+potholeResponse.getLatitude());
+                    }
+
+                    locationTrackingIntent.putExtra("listPothole", (Serializable) listPothole);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        requireContext().startForegroundService(locationTrackingIntent);
+                    } else {
+                        requireContext().startService(locationTrackingIntent);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<PotholeResponse>>> call, @NonNull Throwable throwable) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy(); // Giải phóng tài nguyên Mapbox
+        }
+    }
+
+
 }

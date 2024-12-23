@@ -38,8 +38,8 @@
 
     <!-- Home -->
     <string name="hi_user">Hi, hehe!</string>
-    <string name="total_potholes_detected">Total potholes</string>
-    <string name="distance_traveled">Distance traveled (km)</string>
+    <string name="total_potholes_detected">Total potholes detected</string>
+    <string name="distance_traveled">Total potholes encountered</string>
     <string name="today">Today</string>
     <string name="recent">Recent</string>
     <string name="all_potholes">All Potholes</string>

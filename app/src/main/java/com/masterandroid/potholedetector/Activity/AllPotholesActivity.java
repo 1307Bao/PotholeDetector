@@ -1,7 +1,9 @@
 package com.masterandroid.potholedetector.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,20 +14,37 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.masterandroid.potholedetector.API.ApiClient;
+import com.masterandroid.potholedetector.API.ApiService;
+import com.masterandroid.potholedetector.API.DTO.Request.ApiResponse;
+import com.masterandroid.potholedetector.API.DTO.Request.PotholePotentialRequest;
+import com.masterandroid.potholedetector.API.DTO.Response.PotholePotentialResponse;
 import com.masterandroid.potholedetector.Adapter.AllPotholesAdapter;
+import com.masterandroid.potholedetector.Event.OperatorPotholeInterface;
 import com.masterandroid.potholedetector.Model.PotholeModel;
 import com.masterandroid.potholedetector.R;
+import com.masterandroid.potholedetector.Security.SecureStorage;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class AllPotholesActivity extends BaseActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class AllPotholesActivity extends BaseActivity implements OperatorPotholeInterface {
 
     private RecyclerView recyclerView;
     private AllPotholesAdapter adapter;
-    private Map<String,ArrayList<PotholeModel>> groupedItems;
+    private List<PotholePotentialResponse> data;
     private Toolbar toolbar;
+    private ApiService apiService;
+    private String token;
+    private static final String TOKEN_FLAG = "TOKEN_FLAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +56,11 @@ public class AllPotholesActivity extends BaseActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        initData();
-        setupRecyclerView();
+        try {
+            initData();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
 
         toolbar = findViewById(R.id.allPotholeToolBar);
 
@@ -50,33 +72,76 @@ public class AllPotholesActivity extends BaseActivity {
         });
     }
 
-    private void initData() {
-        groupedItems = new HashMap<>();
-        float date = 24;
+    private void initData() throws GeneralSecurityException, IOException {
+        SecureStorage secureStorage = new SecureStorage(this);
+        token = secureStorage.getToken(TOKEN_FLAG);
+        apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
+        data = null;
+        Call<List<PotholePotentialResponse>> call = apiService.getAllPotholePotential();
+        call.enqueue(new Callback<List<PotholePotentialResponse>>() {
 
-        for (int i = 0; i < 16; i++) {
-            date -= 0.5;
-
-            int roundedDate = Math.round(date);
-            String dateString = roundedDate + "/10/2024";
-
-            PotholeModel pothole = new PotholeModel("Detect", dateString + ", 4:14 PM",
-                    "Tạ Quang Bửu, Khu phố 6, phường Linh Trung, thành phố Thủ Đức, TP. HCM");
-
-            if (!groupedItems.containsKey(dateString)) {
-                groupedItems.put(dateString, new ArrayList<>());
+            @Override
+            public void onResponse(Call<List<PotholePotentialResponse>> call, Response<List<PotholePotentialResponse>> response) {
+                if (response.isSuccessful()) {
+                    data = response.body();
+                    setupRecyclerView();
+                }
             }
-            groupedItems.get(dateString).add(pothole);
-        }
+
+            @Override
+            public void onFailure(Call<List<PotholePotentialResponse>> call, Throwable throwable) {
+                Toast.makeText(AllPotholesActivity.this, "Some Error Occured", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
     private void setupRecyclerView() {
-        recyclerView = findViewById(R.id.allPotholeRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter = new AllPotholesAdapter(groupedItems);
-        recyclerView.setAdapter(adapter);
+        if (data != null) {
+            recyclerView = findViewById(R.id.allPotholeRecyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter = new AllPotholesAdapter(data, this, this);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
+    @Override
+    public void onAccept(int position) {
+        Call<ApiResponse<Void>> call = apiService.createPothole(data.get(position).getId());
+        call.enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                Toast.makeText(AllPotholesActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                data.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, data.size());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable throwable) {
+                Toast.makeText(AllPotholesActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    @Override
+    public void onDeny(int position) {
+        Call<ApiResponse<Void>> call = apiService.deletePothole(data.get(position).getId());
+        call.enqueue(new Callback<ApiResponse<Void>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                Toast.makeText(AllPotholesActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                data.remove(position);
+                adapter.notifyItemRemoved(position);
+                adapter.notifyItemRangeChanged(position, data.size());
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Void>> call, Throwable throwable) {
+                Toast.makeText(AllPotholesActivity.this, "Try Again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
 }
