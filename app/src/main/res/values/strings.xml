@@ -37,7 +37,7 @@
     <string name="resend_otp">Didn\'t get OTP? Resend OTP</string>
 
     <!-- Home -->
-    <string name="hi_user">Hi, hehe!</string>
+    <string name="hi_user">Hi!</string>
     <string name="total_potholes_detected">Total potholes detected</string>
     <string name="distance_traveled">Total potholes encountered</string>
     <string name="today">Today</string>
@@ -91,8 +91,12 @@
     <string name="setting_notifications">Notifications</string>
     <string name="setting_appearance">Appearance</string>
     <string name="setting_language">Language</string>
-    <string name="setting_privacy">Privacy &amp; Security</string>
-    <string name="setting_storage">Storage</string>
+    <string name="setting_privacy">User</string>
+    <string name="setting_storage">Sensor</string>
+
+    <string name="high">High</string>
+    <string name="medium">Medium</string>
+    <string name="low">Low</string>
 
     <!-- PotHole Item -->
     <string name="detect">Detect</string>

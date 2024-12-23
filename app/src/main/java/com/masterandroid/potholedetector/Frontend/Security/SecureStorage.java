@@ -3,7 +3,6 @@ package com.masterandroid.potholedetector.Frontend.Security;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -15,6 +14,8 @@ import java.security.GeneralSecurityException;
 public class SecureStorage {
     private SharedPreferences sharedPreferences;
     private static final String TOKEN_FLAG = "TOKEN_FLAG";
+    private static final String NAME_FLAG = "NAME_FLAG";
+    private static final String USERNAME_FLAG = "USERNAME_FLAG";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public SecureStorage(Context context) throws GeneralSecurityException, IOException {
@@ -29,14 +30,15 @@ public class SecureStorage {
         );
     }
 
-    public void saveToken(String token) {
+    public void save(String token, String name, String username) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Log.e("TOKEN", token);
         editor.putString(TOKEN_FLAG, token);
+        editor.putString(NAME_FLAG, name);
+        editor.putString(USERNAME_FLAG, username);
         editor.apply();
     }
 
-    public String getToken(String flags) {
+    public String getValue(String flags) {
         return sharedPreferences.getString(flags, "");
     }
 

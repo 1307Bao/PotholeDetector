@@ -67,7 +67,7 @@ public class AllPotholesActivity extends BaseActivity implements OperatorPothole
 
     private void initData() throws GeneralSecurityException, IOException {
         SecureStorage secureStorage = new SecureStorage(this);
-        token = secureStorage.getToken(TOKEN_FLAG);
+        token = secureStorage.getValue(TOKEN_FLAG);
         apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
         data = null;
         Call<List<PotholePotentialResponse>> call = apiService.getAllPotholePotential();

@@ -204,7 +204,7 @@ public class ReportFragment extends Fragment {
 
     private void initData() throws GeneralSecurityException, IOException {
         SecureStorage secureStorage = new SecureStorage(requireContext());
-        String token = secureStorage.getToken("TOKEN_FLAG");
+        String token = secureStorage.getValue("TOKEN_FLAG");
         apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
 
         Call<ReportResponse> call = apiService.getReport();

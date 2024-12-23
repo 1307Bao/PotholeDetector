@@ -64,7 +64,9 @@ public class LoginService {
         }
 
         var token = generateToken(user);
-        return LoginResponse.builder().token(token).build();
+        return LoginResponse.builder().token(token)
+                .name(user.getName())
+                .username(user.getUsername()).build();
     }
 
     public LoginResponse loginByGmail(LoginByGmailRequest request) throws AppRunTimeException {
@@ -88,7 +90,9 @@ public class LoginService {
 
             String genToken = generateToken(user);
 
-            return LoginResponse.builder().token(genToken).build();
+            return LoginResponse.builder().token(genToken)
+                    .username(user.getUsername())
+                    .name(user.getName()).build();
 
         } catch (GeneralSecurityException | IOException | AppRunTimeException e) {
             throw new AppRunTimeException(ErrorCode.UNAUTHENTICATED);
@@ -110,7 +114,9 @@ public class LoginService {
             User user = userRepository.findByEmail(email).orElseThrow(()->
                     new AppRunTimeException(ErrorCode.UNCATEGORIZED_EXCEPTION));
             String token = generateToken(user);
-            return LoginResponse.builder().token(token).build();
+            return LoginResponse.builder().token(token)
+                    .name(user.getName())
+                    .username(user.getUsername()).build();
         }
     }
 

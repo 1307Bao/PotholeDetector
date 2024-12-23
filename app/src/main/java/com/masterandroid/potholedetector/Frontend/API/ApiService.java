@@ -28,6 +28,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -94,5 +95,8 @@ public interface ApiService {
 
     @GET("/pothole/users/report")
     Call<ReportResponse> getReport();
+
+    @PUT("/pothole/users/update")
+    Call<ApiResponse<Void>> updateUser(@Query("username") String name, @Query("name") String username);
 
 }

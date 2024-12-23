@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -41,7 +42,6 @@ import retrofit2.Response;
 public class PotholeDetectionService extends Service implements SensorEventListener {
     // Constants
     private static final String CHANNEL_ID = "PotholeDetectionChannel";
-    private static final float THRESHOLD = 10.0f;
     private static final int WINDOW_SIZE = 5;
     private static final String TOKEN_FLAG = "TOKEN_FLAG";
     private static final long COLLECTION_INTERVAL = 3000; // 3 seconds in milliseconds
@@ -62,6 +62,7 @@ public class PotholeDetectionService extends Service implements SensorEventListe
     private float maxAcceleration = 0f;
     private long lastRequestTime = 0;
     private Location lastLocation = null;
+    private float THRESHOLD;
 
     @Override
     public void onCreate() {
@@ -74,8 +75,10 @@ public class PotholeDetectionService extends Service implements SensorEventListe
         // Initialize API service
         try {
             SecureStorage secureStorage = new SecureStorage(this);
-            token = secureStorage.getToken(TOKEN_FLAG);
+            token = secureStorage.getValue(TOKEN_FLAG);
             apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
+            SharedPreferences sharedPreferences = getSharedPreferences("Sensor", MODE_PRIVATE);
+            THRESHOLD = sharedPreferences.getInt("sensor", 10);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }

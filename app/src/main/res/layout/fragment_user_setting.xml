@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Frontend.Fragment.UserSettingFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/userToolbar"
+        app:title="@string/setting_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@color/light_primary_color"
+        app:navigationIcon="@drawable/car_ui_icon_arrow_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/settingNameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Name"
+        android:textColor="@color/light_main_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userToolbar" />
+
+    <EditText
+        android:id="@+id/settingName"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/border_with_stroke"
+        app:layout_constraintTop_toBottomOf="@id/settingNameTitle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/settingUsernameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Username"
+        android:textColor="@color/light_main_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settingName" />
+
+    <EditText
+        android:id="@+id/settingUsername"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/border_with_stroke"
+        app:layout_constraintTop_toBottomOf="@id/settingUsernameTitle"
+        android:layout_marginLeft="20dp"
+        android:paddingLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/btnSettingSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/settingUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Send"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

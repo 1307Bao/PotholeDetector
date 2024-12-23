@@ -34,8 +34,8 @@ public interface PotholeRepository extends JpaRepository<Pothole, String> {
                 count(*) as pothole_detected
             From pothole
             Where DATE(time_detected) BETWEEN 
-                  DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)  
-                  AND DATE_ADD(CURDATE(), INTERVAL (6 - WEEKDAY(CURDATE())) DAY) 
+                  DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE() - 1) DAY)  
+                  AND DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) DAY) 
                   AND user_id = :userId
               GROUP BY day_name, day_order
               ORDER BY day_order;

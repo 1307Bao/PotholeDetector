@@ -5,10 +5,12 @@ import com.example.demo.dto.response.PotholeInfoResponse;
 import com.example.demo.dto.response.ReportPerDayResponse;
 import com.example.demo.dto.response.ReportResponse;
 import com.example.demo.entity.Pothole;
+import com.example.demo.entity.User;
 import com.example.demo.exception.AppRunTimeException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.PotholeDetectedRepository;
 import com.example.demo.repository.PotholeRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +27,7 @@ import java.util.*;
 public class UserService {
     PotholeDetectedRepository potholeDetectedRepository;
     PotholeRepository potholeRepository;
+    UserRepository userRepository;
 
     public PotholeInfoResponse getMyPotholeInfo() {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -116,5 +119,20 @@ public class UserService {
                 .reportPerDayResponses(reportPerDayResponses)
                 .potholeDetectedResponses(potholeDetectedResponses)
                 .build();
+    }
+
+    public void updateUser(String username, String name) throws AppRunTimeException {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (userRepository.existsByUsername(username)) {
+            throw new AppRunTimeException(ErrorCode.USER_EXISTS);
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new AppRunTimeException(ErrorCode.UNCATEGORIZED_EXCEPTION)
+        );
+
+        user.setName(name);
+        user.setUsername(username);
+        userRepository.save(user);
     }
 }

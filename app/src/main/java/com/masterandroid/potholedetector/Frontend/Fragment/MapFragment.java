@@ -267,7 +267,7 @@ public class MapFragment extends Fragment {
 
         try {
             SecureStorage secureStorage = new SecureStorage(requireContext());
-            String token = secureStorage.getToken("TOKEN_FLAG");
+            String token = secureStorage.getValue("TOKEN_FLAG");
             Log.e("TOKEN IN FRAGMENT:", token);
             apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
         } catch (GeneralSecurityException | IOException e) {
