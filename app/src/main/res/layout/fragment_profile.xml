@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/backgroundColor"
-    tools:context=".Fragment.ProfileFragment">
+    tools:context=".Frontend.Fragment.ProfileFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profileUserAvatarContainer"

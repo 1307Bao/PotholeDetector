@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
 
     <application
-        android:name=".Application.CustomApplication"
+        android:name=".Frontend.Application.CustomApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,7 +24,7 @@
         tools:targetApi="30">
 
         <activity
-            android:name=".Activity.SplashActivity"
+            android:name=".Frontend.Activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,39 +33,39 @@
         </activity>
 
         <activity
-            android:name=".Activity.AllPotholesActivity"
+            android:name=".Frontend.Activity.AllPotholesActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.ResetPasswordActivity"
+            android:name=".Frontend.Activity.ResetPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.EnterOTPActivity"
+            android:name=".Frontend.Activity.EnterOTPActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.ForgetPasswordActivity"
+            android:name=".Frontend.Activity.ForgetPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.SignInActivity"
+            android:name=".Frontend.Activity.SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.CreateAccountActivity"
+            android:name=".Frontend.Activity.CreateAccountActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name=".Frontend.Activity.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".Activity.LanguageChooserActivity"
+            android:name=".Frontend.Activity.LanguageChooserActivity"
             android:exported="true">
         </activity>
 
         <service
-            android:name=".Service.PotholeDetectionService"
+            android:name=".Frontend.Service.PotholeDetectionService"
             android:exported="false"
             android:foregroundServiceType="location">
         </service>
 
         <service
-            android:name=".Service.LocationTrackingService"
+            android:name=".Frontend.Service.LocationTrackingService"
             android:exported="false"
             android:foregroundServiceType="location">
         </service>
