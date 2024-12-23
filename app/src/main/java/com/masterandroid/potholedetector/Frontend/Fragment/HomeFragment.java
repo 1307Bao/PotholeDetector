@@ -1,5 +1,6 @@
 package com.masterandroid.potholedetector.Frontend.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -39,7 +40,7 @@ public class HomeFragment extends Fragment {
     private TextView tvAllPothole;
     private ApiService apiService;
     private RecyclerView recyclerView;
-    private TextView tvTotalPothole, tvTotalPotholeEncountered, tvTodayPothole;
+    private TextView tvTotalPothole, tvTotalPotholeEncountered, tvTodayPothole, tvHiUser;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment {
         tvTotalPotholeEncountered = view.findViewById(R.id.distanceTotalPothole);
         tvTodayPothole = view.findViewById(R.id.homeTodayPotholes);
         recyclerView = view.findViewById(R.id.homeListPothole);
+        tvHiUser = view.findViewById(R.id.hi_user);
 
         try {
             initData();
@@ -73,10 +75,13 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     private void initData() throws GeneralSecurityException, IOException {
         potholeModels = new ArrayList<PotholeModel>();
         SecureStorage secureStorage = new SecureStorage(requireContext());
-        String token = secureStorage.getToken("TOKEN_FLAG");
+        String token = secureStorage.getValue("TOKEN_FLAG");
+        String username = secureStorage.getValue("USERNAME_FLAG");
+        tvHiUser.setText(tvHiUser.getText() + " " + username);
         apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
 
         Call<PotholeInfoResponse> call = apiService.getMyPotholeInfo();

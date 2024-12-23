@@ -38,7 +38,7 @@
     <string name="resend_otp">Không nhận được OTP? Gửi lại OTP</string>
 
     <!-- Home -->
-    <string name="hi_user">Xin chào, hehe!</string>
+    <string name="hi_user">Xin chào</string>
     <string name="total_potholes_detected">Tổng số ổ gà</string>
     <string name="distance_traveled">Tổng ổ gà đã gặp</string>
     <string name="today">Hôm nay</string>
@@ -91,8 +91,12 @@
     <string name="setting_notifications">Thông báo</string>
     <string name="setting_appearance">Giao diện</string>
     <string name="setting_language">Ngôn ngữ</string>
-    <string name="setting_privacy">Quyền riêng tư &amp; Bảo mật</string>
-    <string name="setting_storage">Bộ nhớ</string>
+    <string name="setting_privacy">Người dùng</string>
+    <string name="setting_storage">Cảm biến</string>
+
+    <string name="high">Cao</string>
+    <string name="medium">Vừa</string>
+    <string name="low">Thấp</string>
 
     <!-- PotHole Item -->
     <string name="detect">Phát hiện</string>

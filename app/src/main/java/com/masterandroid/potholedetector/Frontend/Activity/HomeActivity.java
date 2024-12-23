@@ -23,44 +23,66 @@ import com.masterandroid.potholedetector.R;
 
 
 public class HomeActivity extends BaseActivity {
-
     private BottomNavigationView navBottom;
     private HomeFragment homeFragment;
     private MapFragment mapFragment;
     private ReportFragment reportFragment;
     private ProfileFragment profileFragment;
-
     private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_home);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         navBottom = findViewById(R.id.bottom_navigation);
 
-        homeFragment = new HomeFragment();
-        mapFragment = new MapFragment();
-        reportFragment = new ReportFragment();
-        profileFragment = new ProfileFragment();
+        // Only create new fragments if this is not a recreation
+        if (savedInstanceState == null) {
+            homeFragment = new HomeFragment();
+            mapFragment = new MapFragment();
+            reportFragment = new ReportFragment();
+            profileFragment = new ProfileFragment();
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fragmentContainer, profileFragment, "PROFILE").hide(profileFragment);
-        transaction.add(R.id.fragmentContainer, reportFragment, "REPORT").hide(reportFragment);
-        transaction.add(R.id.fragmentContainer, mapFragment, "MAP").hide(mapFragment);
-        transaction.add(R.id.fragmentContainer, homeFragment, "HOME");
-        transaction.commit();
-        
-        activeFragment = homeFragment;
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragmentContainer, profileFragment, "PROFILE").hide(profileFragment);
+            transaction.add(R.id.fragmentContainer, reportFragment, "REPORT").hide(reportFragment);
+            transaction.add(R.id.fragmentContainer, mapFragment, "MAP").hide(mapFragment);
+            transaction.add(R.id.fragmentContainer, homeFragment, "HOME");
+            transaction.commit();
+
+            activeFragment = homeFragment;
+        } else {
+            // Restore fragments from saved state
+            homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag("HOME");
+            mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("MAP");
+            reportFragment = (ReportFragment) getSupportFragmentManager().findFragmentByTag("REPORT");
+            profileFragment = (ProfileFragment) getSupportFragmentManager().findFragmentByTag("PROFILE");
+
+            // Find which fragment was active
+            if (homeFragment != null && !homeFragment.isHidden()) activeFragment = homeFragment;
+            else if (mapFragment != null && !mapFragment.isHidden()) activeFragment = mapFragment;
+            else if (reportFragment != null && !reportFragment.isHidden()) activeFragment = reportFragment;
+            else if (profileFragment != null && !profileFragment.isHidden()) activeFragment = profileFragment;
+        }
 
         setUpNavBottom();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Clean up MapboxNavigation when activity is destroyed
+        if (mapFragment != null) {
+            mapFragment.cleanupMapboxNavigation();
+        }
     }
 
     private void setUpNavBottom() {
@@ -69,79 +91,66 @@ public class HomeActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    String tag = fragment.getTag();
+                    if (tag == null || (!tag.equals("HOME") && !tag.equals("MAP") &&
+                            !tag.equals("REPORT") && !tag.equals("PROFILE"))) {
+                        transaction.remove(fragment);
+                    }
+                }
+
                 if (item.getItemId() == R.id.home) {
                     if (!(activeFragment instanceof HomeFragment)) {
                         transaction.hide(activeFragment).show(homeFragment).commit();
                         activeFragment = homeFragment;
                     } else {
-                        transaction.remove(homeFragment);
-                        homeFragment.onDestroy();
                         homeFragment = new HomeFragment();
-                        transaction.add(R.id.fragmentContainer, homeFragment, "HOME");
-                        transaction.commit();
+                        transaction.hide(activeFragment)
+                                .remove(activeFragment)
+                                .add(R.id.fragmentContainer, homeFragment, "HOME")
+                                .commit();
                         activeFragment = homeFragment;
                     }
                     return true;
-
-                } else if (item.getItemId() == R.id.map ) {
+                } else if (item.getItemId() == R.id.map) {
                     if (!(activeFragment instanceof MapFragment)) {
                         transaction.hide(activeFragment).show(mapFragment).commit();
                         activeFragment = mapFragment;
                     } else {
-                        mapFragment.onDestroy();
-                        transaction.remove(mapFragment);
+                        // Clean up previous MapFragment if it exists
+                        if (mapFragment != null) {
+                            mapFragment.cleanupMapboxNavigation();
+                            transaction.remove(mapFragment);
+                        }
                         mapFragment = new MapFragment();
-                        transaction.add(R.id.fragmentContainer, mapFragment, "MAP");
-                        transaction.commit();
+                        transaction.hide(activeFragment)
+                                .add(R.id.fragmentContainer, mapFragment, "MAP")
+                                .commit();
                         activeFragment = mapFragment;
                     }
                     return true;
-
                 } else if (item.getItemId() == R.id.report) {
                     if (!(activeFragment instanceof ReportFragment)) {
                         transaction.hide(activeFragment).show(reportFragment).commit();
                         activeFragment = reportFragment;
                     } else {
-                        transaction.remove(reportFragment);
-                        reportFragment.onDestroy();
                         reportFragment = new ReportFragment();
-                        transaction.add(R.id.fragmentContainer, reportFragment, "REPORT");
-                        transaction.commit();
+                        transaction.hide(activeFragment)
+                                .remove(activeFragment)
+                                .add(R.id.fragmentContainer, reportFragment, "REPORT")
+                                .commit();
                         activeFragment = reportFragment;
                     }
-
                     return true;
-
                 } else if (item.getItemId() == R.id.profile) {
                     if (!(activeFragment instanceof ProfileFragment)) {
                         transaction.hide(activeFragment).show(profileFragment).commit();
                         activeFragment = profileFragment;
-                    } else {
-                        transaction.remove(profileFragment);
-                        transaction.add(R.id.fragmentContainer, profileFragment, "PROFILE");
-                        transaction.commit();
                     }
-
                     return true;
                 }
-
                 return false;
             }
         });
-
-        ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{android.R.attr.state_checked}, // trạng thái được chọn
-                        new int[]{-android.R.attr.state_checked} // trạng thái không được chọn
-                },
-                new int[]{
-                        ContextCompat.getColor(this, R.color.light_primary_color), // Màu khi được chọn
-                        ContextCompat.getColor(this, R.color.light_main_text_color) // Màu khi không được chọn
-                }
-        );
-
-        navBottom.setItemIconTintList(colorStateList);
-        navBottom.setItemTextColor(colorStateList);
     }
-
 }

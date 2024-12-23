@@ -18,11 +18,6 @@ import com.masterandroid.potholedetector.R;
 public class AppearanceFragment extends Fragment {
     private RadioGroup radioGroup;
 
-    public AppearanceFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +40,22 @@ public class AppearanceFragment extends Fragment {
                 break;
         }
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                // Remove this fragment and show profile fragment
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(AppearanceFragment.this);
+                Fragment profileFragment = fragmentManager.findFragmentByTag("PROFILE");
+                if (profileFragment != null) {
+                    fragmentTransaction.show(profileFragment);
+                }
+                fragmentTransaction.commit();
+            }
+        });
+
         // Handle theme changes
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             String selectedTheme;
@@ -58,18 +69,25 @@ public class AppearanceFragment extends Fragment {
 
             ThemeHelper.saveThemeMode(requireContext(), selectedTheme);
             ThemeHelper.applyTheme(selectedTheme);
-            requireActivity().recreate();
-        });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                fragmentTransaction.replace(R.id.fragmentContainer, new ProfileFragment());
-                fragmentTransaction.commit();
+            // Clean up MapboxNavigation before recreation
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            Fragment mapFragment = fragmentManager.findFragmentByTag("MAP");
+            if (mapFragment instanceof MapFragment) {
+                ((MapFragment) mapFragment).cleanupMapboxNavigation();
             }
+
+            // Remove this fragment and show profile fragment
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(this);
+            Fragment profileFragment = fragmentManager.findFragmentByTag("PROFILE");
+            if (profileFragment != null) {
+                fragmentTransaction.show(profileFragment);
+            }
+            fragmentTransaction.commit();
+
+            // Recreate activity after fragment transaction
+            requireActivity().recreate();
         });
 
         return view;

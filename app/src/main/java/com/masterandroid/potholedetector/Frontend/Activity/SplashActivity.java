@@ -43,7 +43,7 @@ public class SplashActivity extends BaseActivity {
             public void run() {
                 try {
                     secureStorage = new SecureStorage(SplashActivity.this);
-                    String token = secureStorage.getToken(TOKEN_FLAG);
+                    String token = secureStorage.getValue(TOKEN_FLAG);
 
                     if (!token.isEmpty()) {
                         Call<ApiResponse<AuthenticationResponse>> introspect = apiService.introspect(

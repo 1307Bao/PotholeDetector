@@ -83,7 +83,9 @@ public class RegisterService {
         userRepository.save(user);
         String token = generateToken(user);
 
-        return RegisterResponse.builder().token(token).build();
+        return RegisterResponse.builder().token(token)
+                .username(user.getUsername())
+                .name(user.getName()).build();
     }
 
     public RegisterResponse registerByGmail(RegisterByGmailRequest request) {
@@ -117,7 +119,9 @@ public class RegisterService {
                 token = generateToken(user);
             }
 
-            return RegisterResponse.builder().token(token).build();
+            return RegisterResponse.builder().token(token)
+                    .name(user.getName())
+                    .username(user.getUsername()).build();
 
         } catch (GeneralSecurityException | IOException | AppRunTimeException e) {
             throw new RuntimeException(e);
@@ -140,7 +144,9 @@ public class RegisterService {
         }
 
         String token = generateToken(user);
-        return RegisterResponse.builder().token(token).build();
+        return RegisterResponse.builder().token(token)
+                .username(username)
+                .name(user.getName()).build();
     }
 
     private String generateToken(User user) {

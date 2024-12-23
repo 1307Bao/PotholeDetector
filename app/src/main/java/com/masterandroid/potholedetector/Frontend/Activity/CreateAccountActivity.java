@@ -206,7 +206,19 @@ public class CreateAccountActivity extends BaseActivity {
                 String email = textInputMail.getText().toString().trim();
                 String password = textInputPassword.getText().toString().trim();
 
-                Log.e("Registration Data", "Username: " + username + ", Email: " + email + ", Password: " + password);
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    return;
+                }
+
+                if (password.length() < 8) {
+                    makeToast("Password at least 8 characters");
+                    return;
+                }
+
+                if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
+                    makeToast("Invalid email");
+                    return;
+                }
 
                 RegisterByUserRequest request = new RegisterByUserRequest(username, email, password);
 
@@ -222,6 +234,11 @@ public class CreateAccountActivity extends BaseActivity {
         register.enqueue(new Callback<ApiResponse<RegisterResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<RegisterResponse>> call, Response<ApiResponse<RegisterResponse>> response) {
+                if (response.code() == 400) {
+                    makeToast("Username existed");
+                    return;
+                }
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     handlerResponse(response);
                 }
@@ -390,7 +407,7 @@ public class CreateAccountActivity extends BaseActivity {
 
         try {
             SecureStorage secureStorage = new SecureStorage(getApplicationContext());
-            secureStorage.saveToken(registerResponse.getToken());
+            secureStorage.save(registerResponse.getToken(), registerResponse.getName(), registerResponse.getUsername());
 
             Log.e("TOKEN SAVE", registerResponse.getToken());
         } catch (GeneralSecurityException | IOException e) {

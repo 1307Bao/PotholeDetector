@@ -10,8 +10,12 @@ import java.util.List;
 public interface PotholePotentialRepository extends JpaRepository<PotholePotential, String> {
     List<PotholePotential> findByUserId(String userId);
 
+
     @Query(value = """
-            select count(*) from pothole where user_id = :userId
+            select count(*) > 1 from pothole_potential
+            where user_id = :id and longitude = :longitude and latitude = :latitude
             """, nativeQuery = true)
-    int totalPotholeEncountered(@Param("userId") String userId);
+    boolean isExists(@Param("id") String id,
+                     @Param("longitude") double longitude,
+                     @Param("latitude") double latitude);
 }

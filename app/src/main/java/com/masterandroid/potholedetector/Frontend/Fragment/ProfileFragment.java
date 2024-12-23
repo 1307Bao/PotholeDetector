@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.masterandroid.potholedetector.Frontend.API.ApiClient;
@@ -42,6 +43,9 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
     private AppCompatButton btnLogout;
     private ApiService apiService;
     private SecureStorage secureStorage;
+    private TextView tvName, tvUsername;
+    private static final String NAME_FLAG = "NAME_FLAG";
+    private static final String USERNAME_FLAG = "USERNAME_FLAG";
     private static final String TOKEN_FLAG = "TOKEN_FLAG";
 
     @Override
@@ -52,7 +56,14 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
         btnLogout = view.findViewById(R.id.profileButtonLogOut);
         apiService = ApiClient.getClient().create(ApiService.class);
 
-        initData();
+        tvName = view.findViewById(R.id.profileUserName);
+        tvUsername = view.findViewById(R.id.profileUserID);
+
+        try {
+            initData();
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
         setUpBtnLogout();
         RecyclerView recyclerView = view.findViewById(R.id.profileAllSetting);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -62,13 +73,19 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
         return view;
     }
 
-    private void initData() {
+    private void initData() throws GeneralSecurityException, IOException {
         settingNameList = new ArrayList<String>();
         settingNameList.add(getString(R.string.setting_notifications));
         settingNameList.add(getString(R.string.setting_appearance));
         settingNameList.add(getString(R.string.setting_language));
         settingNameList.add(getString(R.string.setting_privacy));
         settingNameList.add(getString(R.string.setting_storage));
+
+        SecureStorage secureStorage = new SecureStorage(requireContext());
+        String name = secureStorage.getValue(NAME_FLAG);
+        String username = secureStorage.getValue(USERNAME_FLAG);
+        tvName.setText(name);
+        tvUsername.setText(username);
     }
 
     @Override
@@ -79,14 +96,18 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
             switchFragment(new AppearanceFragment());
         } else if (position == 2) {
             switchFragment(new LanguageFragment());
+        } else if (position == 3) {
+            switchFragment(new UserSettingFragment());
+        } else if (position == 4) {
+            switchFragment(new SensorFragment());
         }
     }
 
     private void switchFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment);
+        fragmentTransaction.hide(this);
+        fragmentTransaction.add(R.id.fragmentContainer, fragment);
         fragmentTransaction.commit();
     }
 
@@ -136,7 +157,7 @@ public class ProfileFragment extends Fragment implements SettingItemInteface {
 
     private void logout() throws GeneralSecurityException, IOException {
         secureStorage = new SecureStorage(requireContext());
-        String token = secureStorage.getToken(TOKEN_FLAG);
+        String token = secureStorage.getValue(TOKEN_FLAG);
 
         LogoutRequest request = new LogoutRequest(token);
 

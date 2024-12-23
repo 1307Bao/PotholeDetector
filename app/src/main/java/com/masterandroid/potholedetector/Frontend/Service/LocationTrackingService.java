@@ -123,7 +123,7 @@ public class LocationTrackingService extends Service {
     private void initializeApiService() {
         try {
             SecureStorage secureStorage = new SecureStorage(getApplicationContext());
-            token = secureStorage.getToken("TOKEN_FLAG");
+            token = secureStorage.getValue("TOKEN_FLAG");
             if (token != null) {
                 apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
             }

@@ -156,6 +156,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -267,7 +268,7 @@ public class MapFragment extends Fragment {
 
         try {
             SecureStorage secureStorage = new SecureStorage(requireContext());
-            String token = secureStorage.getToken("TOKEN_FLAG");
+            String token = secureStorage.getValue("TOKEN_FLAG");
             Log.e("TOKEN IN FRAGMENT:", token);
             apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
         } catch (GeneralSecurityException | IOException e) {
@@ -325,10 +326,15 @@ public class MapFragment extends Fragment {
         routeLineView = new MapboxRouteLineView(options);
         routeLineApi = new MapboxRouteLineApi(options);
 
+        if (mapboxNavigation != null) {
+            cleanupMapboxNavigation();
+        }
 
-        NavigationOptions navigationOptions = new NavigationOptions.Builder(requireContext()).accessToken(getString(R.string.mapbox_access_token)).build();
+        NavigationOptions navigationOptions = new NavigationOptions.Builder(requireContext())
+                .accessToken(getString(R.string.mapbox_access_token))
+                .build();
+
         MapboxNavigationApp.setup(navigationOptions);
-
         mapboxNavigation = new MapboxNavigation(navigationOptions);
         mapboxNavigation.registerRoutesObserver(routesObserver);
         mapboxNavigation.registerLocationObserver(locationObserver);
@@ -602,9 +608,10 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapboxNavigation.onDestroy();
-        mapboxNavigation.unregisterRoutesObserver(routesObserver);
-        mapboxNavigation.unregisterLocationObserver(locationObserver);
+        cleanupMapboxNavigation();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
     }
 
     public void initData() throws GeneralSecurityException, IOException {
@@ -689,11 +696,20 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroy();
+        super.onDestroyView();
+        cleanupMapboxNavigation();
         if (mapView != null) {
-            mapView.onDestroy(); // Giải phóng tài nguyên Mapbox
+            mapView.onDestroy();
         }
     }
 
+    public void cleanupMapboxNavigation() {
+        if (mapboxNavigation != null) {
+            mapboxNavigation.unregisterRoutesObserver(routesObserver);
+            mapboxNavigation.unregisterLocationObserver(locationObserver);
+            mapboxNavigation.onDestroy();
+            mapboxNavigation = null;
+        }
+    }
 
 }

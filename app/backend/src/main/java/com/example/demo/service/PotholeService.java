@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.Point;
-import com.example.demo.dto.request.PotholePotentialRequest;
 import com.example.demo.dto.request.PotholeRequest;
 import com.example.demo.dto.request.RouteRequest;
 import com.example.demo.dto.response.PotholePotentialResponse;
@@ -9,7 +8,6 @@ import com.example.demo.dto.response.PotholeResponse;
 import com.example.demo.entity.Pothole;
 import com.example.demo.entity.PotholeDetected;
 import com.example.demo.entity.PotholePotential;
-import com.example.demo.entity.User;
 import com.example.demo.exception.AppRunTimeException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.mapper.PotholeMapper;
@@ -220,6 +218,10 @@ public class PotholeService {
     public void addMorePotentialPothole(double longitude, double latitude) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         String address = "";
+
+        if (potholePotentialRepository.isExists(id, longitude, latitude)) {
+            return;
+        }
 
         JOpenCageGeocoder geocoder = new JOpenCageGeocoder(GEO_API);
         JOpenCageReverseRequest request = new JOpenCageReverseRequest(longitude, latitude);

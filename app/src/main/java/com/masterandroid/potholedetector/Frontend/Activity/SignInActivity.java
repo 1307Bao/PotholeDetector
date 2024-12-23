@@ -139,7 +139,19 @@ public class SignInActivity extends BaseActivity {
                 String email = textEmail.getText().toString().trim();
                 String password = textPassword.getText().toString().trim();
 
-                Log.e("DATA", email + "  " + password);
+                if (email.isEmpty() || password.isEmpty()) {
+                    return;
+                }
+
+                if (password.length() < 8) {
+                    makeToast("Password at least 8 characters");
+                    return;
+                }
+
+                if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
+                    makeToast("Invalid email");
+                    return;
+                }
 
                 LoginByUserRequest request = new LoginByUserRequest(email, password);
                 loginByUserHandler(request);
@@ -322,7 +334,7 @@ public class SignInActivity extends BaseActivity {
 
         try {
             SecureStorage secureStorage = new SecureStorage(getApplicationContext());
-            secureStorage.saveToken(loginResponse.getToken());
+            secureStorage.save(loginResponse.getToken(), loginResponse.getName(), loginResponse.getUsername());
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }

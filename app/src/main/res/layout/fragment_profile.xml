@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="thr.thhh"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="?attr/subTextColor" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,15 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ApiResponse;
 import com.example.demo.dto.response.PotholeDetectedResponse;
 import com.example.demo.dto.response.PotholeInfoResponse;
 import com.example.demo.dto.response.ReportResponse;
+import com.example.demo.exception.AppRunTimeException;
 import com.example.demo.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,5 +38,11 @@ public class UserController {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @PutMapping("update")
+    ApiResponse<Void> updateUser(@RequestParam String username, @RequestParam String name) throws AppRunTimeException {
+        userService.updateUser(username, name);
+        return ApiResponse.<Void>builder().build();
     }
 }

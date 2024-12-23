@@ -20,7 +20,6 @@ import com.masterandroid.potholedetector.R;
 
 
 public class LanguageFragment extends Fragment {
-
     private RadioGroup languageRadioGroup;
     private RadioButton languageRadioButtonEnglish, languageRadioButtonVietnamese;
     private Toolbar languageToolbar;
@@ -34,22 +33,24 @@ public class LanguageFragment extends Fragment {
         languageRadioButtonEnglish = view.findViewById(R.id.languageRadioButtonEnglish);
         languageRadioButtonVietnamese = view.findViewById(R.id.languageRadioButtonVietnamese);
 
+        // Set up toolbar navigation
         languageToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(LanguageFragment.this);
 
-                fragmentTransaction.replace(R.id.fragmentContainer, new ProfileFragment());
+                Fragment profileFragment = fragmentManager.findFragmentByTag("PROFILE");
+                assert profileFragment != null;
+                fragmentTransaction.show(profileFragment);
                 fragmentTransaction.commit();
             }
         });
 
         // Set current language selection
         String currentLanguage = LocaleHelper.getLanguage(requireContext());
-
         Log.e("Language", currentLanguage);
-
 
         if (currentLanguage.equals("vi")) {
             languageRadioButtonVietnamese.setChecked(true);
@@ -57,6 +58,7 @@ public class LanguageFragment extends Fragment {
             languageRadioButtonEnglish.setChecked(true);
         }
 
+        // Handle language changes
         languageRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             String languageCode = "en";
             if (checkedId == R.id.languageRadioButtonVietnamese) {
@@ -64,13 +66,28 @@ public class LanguageFragment extends Fragment {
             }
 
             Log.e("Language", languageCode);
-
             LocaleHelper.setLocale(getActivity(), languageCode);
 
-            getActivity().recreate();
+            // Clean up MapboxNavigation before recreation
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            Fragment mapFragment = fragmentManager.findFragmentByTag("MAP");
+            if (mapFragment instanceof MapFragment) {
+                ((MapFragment) mapFragment).cleanupMapboxNavigation();
+            }
+
+            // Remove this fragment and show profile fragment
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(LanguageFragment.this);
+            Fragment profileFragment = fragmentManager.findFragmentByTag("PROFILE");
+            if (profileFragment != null) {
+                fragmentTransaction.show(profileFragment);
+            }
+            fragmentTransaction.commit();
+
+            // Recreate activity after fragment transaction
+            requireActivity().recreate();
         });
 
         return view;
     }
-
 }
