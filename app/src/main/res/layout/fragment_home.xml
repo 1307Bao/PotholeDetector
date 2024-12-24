@@ -211,7 +211,7 @@
             <FrameLayout
                 android:id="@+id/endHome"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
