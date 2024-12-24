@@ -65,6 +65,12 @@ public class AllPotholesActivity extends BaseActivity implements OperatorPothole
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
     private void initData() throws GeneralSecurityException, IOException {
         SecureStorage secureStorage = new SecureStorage(this);
         token = secureStorage.getValue(TOKEN_FLAG);

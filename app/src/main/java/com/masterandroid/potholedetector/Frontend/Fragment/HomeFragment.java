@@ -1,6 +1,7 @@
 package com.masterandroid.potholedetector.Frontend.Fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -36,6 +37,7 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private ArrayList<PotholeModel> potholeModels;
+    private static final int ALL_POTHOLES_REQUEST = 1;
     private PotholeItemAdapter adapter;
     private TextView tvAllPothole;
     private ApiService apiService;
@@ -68,11 +70,19 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AllPotholesActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ALL_POTHOLES_REQUEST);
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ALL_POTHOLES_REQUEST && resultCode == Activity.RESULT_OK) {
+            requireActivity().recreate();
+        }
     }
 
     @SuppressLint("SetTextI18n")
