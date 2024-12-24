@@ -42,7 +42,8 @@
     <string name="distance_traveled">Total potholes encountered</string>
     <string name="today">Today</string>
     <string name="recent">Recent</string>
-    <string name="all_potholes">All Potholes</string>
+    <string name="confirm_potholes">New detected pothole, tap to confirm</string>
+    <string name="new_potholes">New potholes</string>
 
     <!-- Profile -->
     <string name="appearance">Appearance</string>

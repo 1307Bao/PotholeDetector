@@ -10,7 +10,7 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/allPotholeToolBar"
-        app:title="@string/all_potholes"
+        app:title="@string/new_potholes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
