@@ -44,6 +44,7 @@
     <string name="today">Hôm nay</string>
     <string name="recent">Gần đây</string>
     <string name="confirm_potholes">Ổ gà mới được phát hiện, nhấn để xác nhận</string>
+    <string name="new_potholes">Ổ gà mới</string>
 
     <!-- Profile -->
     <string name="appearance">Giao diện</string>
