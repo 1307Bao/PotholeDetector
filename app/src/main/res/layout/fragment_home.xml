@@ -163,7 +163,7 @@
                     android:id="@+id/homeTodayPotholes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8"
+                    android:text=""
                     android:textColor="?attr/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -176,27 +176,28 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:id="@+id/homePotholesRecent"
                 android:text="@string/recent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/homeTodayTotalInformation"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="32dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/light_primary_color" />
 
             <TextView
                 android:id="@+id/homeAllPotholesNavigation"
-                android:text="@string/all_potholes"
+                android:text="@string/confirm_potholes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/homeTodayTotalInformation"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 android:textColor="@color/light_sub_text_color"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:drawableEnd="@drawable/all_potholes_icon_customize" />
 
@@ -205,12 +206,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/endHome"
-                app:layout_constraintTop_toBottomOf="@id/homeAllPotholesNavigation" />
+                app:layout_constraintTop_toBottomOf="@id/homePotholesRecent" />
 
             <FrameLayout
                 android:id="@+id/endHome"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 

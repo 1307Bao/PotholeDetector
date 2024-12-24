@@ -43,7 +43,7 @@
     <string name="distance_traveled">Tổng ổ gà đã gặp</string>
     <string name="today">Hôm nay</string>
     <string name="recent">Gần đây</string>
-    <string name="all_potholes">Tất cả ổ gà</string>
+    <string name="confirm_potholes">Ổ gà mới được phát hiện, nhấn để xác nhận</string>
 
     <!-- Profile -->
     <string name="appearance">Giao diện</string>
