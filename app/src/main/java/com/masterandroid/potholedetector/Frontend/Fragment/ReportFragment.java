@@ -233,7 +233,7 @@ public class ReportFragment extends Fragment {
     private void setUpRecyclerView(List<PotholeDetectedResponse> detectedResponses) {
         ArrayList<PotholeModel> potholeModels = new ArrayList<>();
         for (PotholeDetectedResponse detectedResponse : detectedResponses) {
-            PotholeModel potholeModel = new PotholeModel("DETECT",
+            PotholeModel potholeModel = new PotholeModel("Detect",
                     detectedResponse.getTimeDetected().toString(), detectedResponse.getAddress());
             potholeModels.add(potholeModel);
         }

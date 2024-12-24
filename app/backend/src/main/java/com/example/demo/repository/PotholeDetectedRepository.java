@@ -14,27 +14,27 @@ public interface PotholeDetectedRepository extends JpaRepository<PotholeDetected
     int totalPotholeEncountered(@Param("userId") String userId);
 
     @Query(value = """
-            SELECT
-                DAYNAME(time_met) AS day_name,
-                DAYOFWEEK(time_met) AS day_order,
-                COUNT(*) AS pothole_detected
-            FROM pothole_detected
-            WHERE DATE(time_met) BETWEEN\s
-                  DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY) \s
-                  AND DATE_ADD(CURDATE(), INTERVAL (7 - DAYOFWEEK(CURDATE())) DAY)\s
-                  AND user_id = :userId
-            GROUP BY day_name, day_order
-            ORDER BY day_order;
+            SELECT\s
+               DAYNAME(time_met) AS day_name,
+               DAYOFWEEK(time_met) AS day_order,
+               COUNT(*) AS pothole_detected
+           FROM pothole_detected
+           WHERE DATE(time_met) BETWEEN\s
+                 DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY)
+                 AND DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY), INTERVAL 6 DAY)
+                 AND user_id = :userId
+           GROUP BY day_name, day_order
+           ORDER BY day_order;
             """, nativeQuery = true)
     List<Object[]> getInfoPerDay(@Param("userId") String userId);
 
     @Query(value = """
     SELECT pothole_id, COUNT(*) AS count
     FROM pothole_detected
-    WHERE DATE(time_met) BETWEEN 
-          DATE_SUB(CURDATE(), INTERVAL (DAYOFWEEK(CURDATE()) - 1) DAY) \s
-          AND DATE_ADD(CURDATE(), INTERVAL (7 - DAYOFWEEK(CURDATE())) DAY)
-          AND user_id = :userId
+    WHERE DATE(time_met) BETWEEN\s
+         DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY)
+         AND DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY), INTERVAL 6 DAY)
+         AND user_id = :userId
     GROUP BY pothole_id
     ORDER BY count DESC
     LIMIT 5

@@ -28,17 +28,17 @@ public interface PotholeRepository extends JpaRepository<Pothole, String> {
     List<Pothole> getCurrentPothole(@Param("userId") String userId);
 
     @Query(value = """
-            Select
-                DAYNAME(time_detected) AS day_name,
-                DAYOFWEEK(time_detected) AS day_order,
-                count(*) as pothole_detected
-            From pothole
-            Where DATE(time_detected) BETWEEN 
-                  DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE() - 1) DAY)  
-                  AND DATE_ADD(CURDATE(), INTERVAL (7 - WEEKDAY(CURDATE())) DAY) 
-                  AND user_id = :userId
-              GROUP BY day_name, day_order
-              ORDER BY day_order;
+            SELECT\s
+                 DAYNAME(time_detected) AS day_name,
+                 DAYOFWEEK(time_detected) AS day_order,
+                 COUNT(*) AS pothole_detected
+             FROM pothole
+             WHERE DATE(time_detected) BETWEEN\s
+                   DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY)
+                   AND DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE()) + 1) DAY), INTERVAL 6 DAY)
+                   AND user_id = :userId
+             GROUP BY day_name, day_order
+             ORDER BY day_order;
             """, nativeQuery = true)
     List<Object[]> getInfoPerDay(@Param("userId") String userId);
 }
