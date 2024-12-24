@@ -78,7 +78,7 @@ public class PotholeDetectionService extends Service implements SensorEventListe
             token = secureStorage.getValue(TOKEN_FLAG);
             apiService = ApiClient.getClientWithToken(token).create(ApiService.class);
             SharedPreferences sharedPreferences = getSharedPreferences("Sensor", MODE_PRIVATE);
-            THRESHOLD = sharedPreferences.getInt("sensor", 10);
+            THRESHOLD = sharedPreferences.getInt("sensor", 5);
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }

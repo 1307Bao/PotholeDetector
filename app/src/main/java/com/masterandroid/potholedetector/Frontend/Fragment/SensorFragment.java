@@ -94,11 +94,11 @@ public class SensorFragment extends Fragment {
         });
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Sensor", Context.MODE_PRIVATE);
-        int sensor = sharedPreferences.getInt("sensor", 10);
+        int sensor = sharedPreferences.getInt("sensor", 5);
 
-        if (sensor == 10) {
+        if (sensor == 5) {
             btnHigh.setChecked(true);
-        } else if (sensor == 12) {
+        } else if (sensor == 7) {
             btnMedium.setChecked(true);
         } else {
             btnLow.setChecked(true);
