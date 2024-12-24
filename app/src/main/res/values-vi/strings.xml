@@ -67,6 +67,10 @@
     <string name="weekly_report">Báo cáo tuần</string>
     <string name="total_potholes_weekly">Tổng số ổ gà trong tuần</string>
     <string name="potholes_per_day">Ổ gà mỗi ngày</string>
+    <string name="detected">Dã phát hiện:</string>
+    <string name="encountered">Đã gặp:</string>
+    <string name="total">Tổng cộng:</string>
+
 
     <!-- Create Account -->
     <string name="create_account">Tạo tài khoản</string>

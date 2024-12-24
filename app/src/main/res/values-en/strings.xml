@@ -66,6 +66,10 @@
     <string name="weekly_report">Weekly Report</string>
     <string name="total_potholes_weekly">Total potholes in the week</string>
     <string name="potholes_per_day">Potholes per Day</string>
+    <string name="detected">Detected:</string>
+    <string name="encountered">Encountered:</string>
+    <string name="total">Total:</string>
+
 
     <!-- Create Account -->
     <string name="create_account">Create Account</string>

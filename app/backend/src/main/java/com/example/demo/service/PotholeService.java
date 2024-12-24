@@ -219,7 +219,7 @@ public class PotholeService {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         String address = "";
 
-        if (potholePotentialRepository.isExists(id, longitude, latitude)) {
+        if (potholePotentialRepository.isExists(id, longitude, latitude) > 1) {
             return;
         }
 

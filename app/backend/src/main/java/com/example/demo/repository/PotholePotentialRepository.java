@@ -12,10 +12,10 @@ public interface PotholePotentialRepository extends JpaRepository<PotholePotenti
 
 
     @Query(value = """
-            select count(*) > 1 from pothole_potential
+            select count(*) from pothole_potential
             where user_id = :id and longitude = :longitude and latitude = :latitude
             """, nativeQuery = true)
-    boolean isExists(@Param("id") String id,
+    int isExists(@Param("id") String id,
                      @Param("longitude") double longitude,
                      @Param("latitude") double latitude);
 }

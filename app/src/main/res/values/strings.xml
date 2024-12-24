@@ -66,6 +66,9 @@
     <string name="weekly_report">Weekly Report</string>
     <string name="total_potholes_weekly">Total potholes in the week</string>
     <string name="potholes_per_day">Potholes per Day</string>
+    <string name="detected">Detected:</string>
+    <string name="encountered">Encountered:</string>
+    <string name="total">Total:</string>
 
 
     <!-- Create Account -->
@@ -107,7 +110,5 @@
     <string name="facebook_app_id">537338769095761</string>
     <string name="fb_login_protocol_scheme">fb537338769095761</string>
     <string name="facebook_client_token">61c8deee4ee37cdcf3e98b94af98c9c3</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
