@@ -26,6 +26,8 @@ import com.masterandroid.potholedetector.R;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import retrofit2.Call;
@@ -38,9 +40,12 @@ public class LocationTrackingService extends Service {
     private static final int NOTIFICATION_ID = 1;
     private static final double WARNING_DISTANCE = 50; // meters
     private static final double ENCOUNTER_DISTANCE = 10; // meters
+    private static final double PASSED_DISTANCE = 20; // meters
 
     private LocationEngine locationEngine;
-    private CopyOnWriteArrayList<PotholeResponse> listPothole; // Thread-safe list
+    private CopyOnWriteArrayList<PotholeResponse> listPothole;
+    private Set<String> activeWarnings;
+    private Point lastLocation;
     private ApiService apiService;
     private String token;
     private NotificationManager notificationManager;
@@ -51,7 +56,13 @@ public class LocationTrackingService extends Service {
             Location location = result.getLastLocation();
             if (location != null) {
                 Point currentPoint = new Point(location.getLongitude(), location.getLatitude());
+
+                if (lastLocation == null) {
+                    lastLocation = currentPoint;
+                }
+
                 checkProximityToPotholes(currentPoint);
+                lastLocation = currentPoint;
             }
         }
 
@@ -69,12 +80,13 @@ public class LocationTrackingService extends Service {
                 listPothole = new CopyOnWriteArrayList<>(receivedList);
             }
         }
-        return START_STICKY; // Service will be restarted if killed
+        return START_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        activeWarnings = new HashSet<>();
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel();
         startForegroundService();
@@ -136,13 +148,21 @@ public class LocationTrackingService extends Service {
         if (listPothole == null || listPothole.isEmpty()) return;
 
         for (PotholeResponse pothole : listPothole) {
-            double distance = haversineDistance(currentLocation,
-                    new Point(pothole.getLongitude(), pothole.getLatitude()));
+            Point potholePoint = new Point(pothole.getLongitude(), pothole.getLatitude());
+            double distance = haversineDistance(currentLocation, potholePoint);
 
             if (distance <= ENCOUNTER_DISTANCE) {
                 handlePotholeEncounter(pothole);
+                cancelWarningNotification(pothole.getId());
             } else if (distance <= WARNING_DISTANCE) {
-                showPotholeWarning();
+                if (!activeWarnings.contains(pothole.getId())) {
+                    showPotholeWarning(pothole);
+                    activeWarnings.add(pothole.getId());
+                }
+            } else if (distance > PASSED_DISTANCE && activeWarnings.contains(pothole.getId())) {
+                if (hasPassed(currentLocation, lastLocation, potholePoint)) {
+                    cancelWarningNotification(pothole.getId());
+                }
             }
         }
     }
@@ -172,15 +192,37 @@ public class LocationTrackingService extends Service {
         });
     }
 
-    private void showPotholeWarning() {
+    private void showPotholeWarning(PotholeResponse pothole) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Notification notification = new Notification.Builder(this, CHANNEL_ID)
                     .setContentTitle("Cảnh báo ổ gà")
-                    .setContentText("Bạn sắp đến gần ổ gà!")
+                    .setContentText("Bạn sắp đến gần ổ gà tại " + pothole.getAddress())
                     .setSmallIcon(R.drawable.baseline_warning_amber_24)
                     .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
         }
+    }
+
+    private void cancelWarningNotification(String potholeId) {
+        activeWarnings.remove(potholeId);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private boolean hasPassed(Point current, Point last, Point pothole) {
+        if (last == null) return false;
+
+        // Tính vector hướng di chuyển
+        double dx = current.getLongitude() - last.getLongitude();
+        double dy = current.getLatitude() - last.getLatitude();
+
+        // Tính vector từ vị trí cuối đến ổ gà
+        double px = pothole.getLongitude() - last.getLongitude();
+        double py = pothole.getLatitude() - last.getLatitude();
+
+        // Tính tích vô hướng
+        double dotProduct = dx * px + dy * py;
+
+        return dotProduct < 0;
     }
 
     private double haversineDistance(Point p1, Point p2) {
