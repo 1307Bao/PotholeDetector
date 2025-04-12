@@ -1,6 +1,9 @@
 # 📱 Pothole Detection App
 ![Logo](./demo/logo.png)
-A mobile application that detects potholes on the road using smartphone sensor data (accelerometer, gyroscope, GPS). It provides real-time alerts and displays pothole locations on a map.
+
+## Project Introduction
+We have built a mobile application that detects potholes using sensor data from smartphones, including the accelerometer, gyroscope, and GPS. The app automatically collects motion and location data while users are driving and analyzes it in real-time to identify potholes. When a pothole is detected, the app records its location and sends instant alerts to the user.
+In addition to automatic detection, the app allows users to manually report potholes and view all pothole locations on an interactive Mapbox-based map. Users can also review historical reports, customize detection sensitivity, and switch between languages. The application supports offline data storage and can optionally sync with a backend server for data sharing and analysis.
 
 
 ## Team Members
@@ -31,8 +34,8 @@ A mobile application that detects potholes on the road using smartphone sensor d
 <div float="left" align="center" >
   <img src="./demo/splash-light.jpg" width="23%" />
   <img src="./demo/splash-dark.jpg" width="23%" />
-  <img src="./demo/select-languae-light.jpg" width="23%" /> 
-  <img src="./demo/select-languae-dark.jpg" width="23%" /> 
+  <img src="./demo/select-language-light.jpg" width="23%" /> 
+  <img src="./demo/select-language-dark.jpg" width="23%" /> 
 </div>
 
  - 🔐 Authentication 
