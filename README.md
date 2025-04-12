@@ -5,6 +5,16 @@
 We have built a mobile application that detects potholes using sensor data from smartphones, including the accelerometer, gyroscope, and GPS. The app automatically collects motion and location data while users are driving and analyzes it in real-time to identify potholes. When a pothole is detected, the app records its location and sends instant alerts to the user.
 In addition to automatic detection, the app allows users to manually report potholes and view all pothole locations on an interactive Mapbox-based map. Users can also review historical reports, customize detection sensitivity, and switch between languages. The application supports offline data storage and can optionally sync with a backend server for data sharing and analysis.
 
+[Watch the Intro](https://github.com/1307Bao/PotholeDetector/blob/master/demo/video/Demo.mp4)
+
+
+<video controls>
+  <source src="Intro.mp4" type="video/mp4">
+  <source src="Detail.webm" type="video/webm">
+  <source src="Demo.ogv" type="video/ogg">
+  Your browser does not support the video tag.
+</video>
+
 
 ## Team Members
 | ID        | Name         |
