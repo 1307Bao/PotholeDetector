@@ -87,9 +87,9 @@ In addition to automatic detection, the app allows users to manually report poth
 </div>
 
 
-[![Watch the Intro](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbnail/Intro.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/video/Intro.mp4)
-[![Watch the Detail](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbnail/Detail.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/video/Detail.mp4)
-[![Watch the Demo](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbnail/Demo.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/video/Demo.mp4)
+[![Watch the Intro](https://github.com/1307Bao/PotholeDetector/raw/master/demo/thumbnail/Intro.png)](https://github.com/1307Bao/PotholeDetector/raw/master/demo/video/Intro.mp4)
+[![Watch the Detail](https://github.com/1307Bao/PotholeDetector/raw/master/demo/thumbnail/Detail.png)](https://github.com/1307Bao/PotholeDetector/raw/master/demo/video/Detail.mp4)
+[![Watch the Demo](https://github.com/1307Bao/PotholeDetector/raw/master/demo/thumbnail/Demo.png)](https://github.com/1307Bao/PotholeDetector/raw/master/demo/video/Demo.mp4)
 
 
 ## 🧪 Technologies Used
