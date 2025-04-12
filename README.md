@@ -42,49 +42,54 @@ In addition to automatic detection, the app allows users to manually report poth
 ## 📷 Demo of Some Interfaces
 - Splash & Select Language
 <div float="left" align="center" >
-  <img src="./demo/splash-light.jpg" width="23%" />
-  <img src="./demo/splash-dark.jpg" width="23%" />
-  <img src="./demo/select-language-light.jpg" width="23%" /> 
-  <img src="./demo/select-language-dark.jpg" width="23%" /> 
+  <img src="./demo/image/splash-light.jpg" width="23%" />
+  <img src="./demo/image/splash-dark.jpg" width="23%" />
+  <img src="./demo/image/select-language-light.jpg" width="23%" /> 
+  <img src="./demo/image/select-language-dark.jpg" width="23%" /> 
 </div>
 
  - 🔐 Authentication 
 <div float="left" align="center" >
-  <img src="./demo/sign-in-light.jpg" width="23%" />
-  <img src="./demo/create-account-light.jpg" width="23%" /> 
-  <img src="./demo/forget-password-light.jpg"width="23%" />
-  <img src="./demo/enter-otp-light.jpg"width="23%" />
+  <img src="./demo/image/sign-in-light.jpg" width="23%" />
+  <img src="./demo/image/create-account-light.jpg" width="23%" /> 
+  <img src="./demo/image/forget-password-light.jpg"width="23%" />
+  <img src="./demo/image/enter-otp-light.jpg"width="23%" />
 </div>
 <div float="left" align="center" >
-  <img src="./demo/sign-in-dark.jpg" width="23%" />
-  <img src="./demo/create-account-dark.jpg" width="23%" /> 
-  <img src="./demo/forget-password-dark.jpg"width="23%" />
-  <img src="./demo/enter-otp-dark.jpg"width="23%" />
+  <img src="./demo/image/sign-in-dark.jpg" width="23%" />
+  <img src="./demo/image/create-account-dark.jpg" width="23%" /> 
+  <img src="./demo/image/forget-password-dark.jpg"width="23%" />
+  <img src="./demo/image/enter-otp-dark.jpg"width="23%" />
 </div>
 
 - 🏠 Home Screen
 <div float="left" align="center" >
-  <img src="./demo/home-light.jpg" width="23%" />
-  <img src="./demo/home-dark.jpg" width="23%" /> 
-  <img src="./demo/new-pothole-light.jpg"width="23%" />
-  <img src="./demo/new-pothole-dark.jpg"width="23%" />
+  <img src="./demo/image/home-light.jpg" width="23%" />
+  <img src="./demo/image/home-dark.jpg" width="23%" /> 
+  <img src="./demo/image/new-pothole-light.jpg"width="23%" />
+  <img src="./demo/image/new-pothole-dark.jpg"width="23%" />
 </div>
 
 - 🗺️ Map View & 📝 Report
 <div float="left" align="center" >
-  <img src="./demo/map-view-light.jpg" width="23%" />
-  <img src="./demo/map-view-dark.jpg" width="23%" /> 
-  <img src="./demo/report-light.jpg"width="23%" />
-  <img src="./demo/report-dark.jpg"width="23%" />
+  <img src="./demo/image/map-view-light.jpg" width="23%" />
+  <img src="./demo/image/map-view-dark.jpg" width="23%" /> 
+  <img src="./demo/image/report-light.jpg"width="23%" />
+  <img src="./demo/image/report-dark.jpg"width="23%" />
 </div>
 
 - ⚙️ Settings
 <div float="left" align="center" >
-  <img src="./demo/setting-light.jpg" width="23%" />
-  <img src="./demo/setting-dark.jpg" width="23%" /> 
-  <img src="./demo/appearance-light.jpg"width="23%" />
-  <img src="./demo/change-name-light.jpg"width="23%" />
+  <img src="./demo/image/setting-light.jpg" width="23%" />
+  <img src="./demo/image/setting-dark.jpg" width="23%" /> 
+  <img src="./demo/image/appearance-light.jpg"width="23%" />
+  <img src="./demo/image/change-name-light.jpg"width="23%" />
 </div>
+
+
+[![Watch the Intro](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbail/Intro.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/Intro.mp4)
+[![Watch the Detail](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbail/Detail.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/Detail.mp4)
+[![Watch the Demo](https://github.com/1307Bao/PotholeDetector/tree/master/demo/thumbail/Demo.png)](https://github.com/1307Bao/PotholeDetector/tree/master/demo/Demo.mp4)
 
 
 ## 🧪 Technologies Used
